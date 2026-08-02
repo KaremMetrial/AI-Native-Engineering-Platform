@@ -41,8 +41,14 @@ and rejected alternatives behind every decision.
 | [Architecture](docs/README.md#architecture) | NFRs, high-level architecture, technology decisions, multi-tenancy, scalability, security, AI strategy |
 | [Delivery](docs/README.md#delivery) | Repository layout, development, coding standards, testing, deployment, review gates, definition of done, documentation |
 | [Governance](docs/README.md#governance) | Risk register, roadmap, final recommendations |
+| [Foundation](docs/README.md#foundation--method-and-durability) | Engineering principles, architecture philosophy, technology selection, naming, performance, versioning, future evolution |
 
-Decisions are numbered globally (`D-01`…`D-209`) so they can be cited precisely
+Where the first four areas record *what we decided*, Foundation records *how
+decisions are made* and how the system stays changeable for a decade. A
+[topic coverage map](docs/README.md#topic-coverage-map) shows where each
+foundation subject is addressed.
+
+Decisions are numbered globally (`D-01`…`D-297`) so they can be cited precisely
 from code review, commit messages, and decision records.
 
 ## Repository Layout
@@ -57,6 +63,7 @@ from code review, commit messages, and decision records.
 | `docs/architecture/adr/` | Architectural decision records (from implementation onward) |
 | `docs/delivery/` | Development, standards, testing, deployment, review, done, documentation |
 | `docs/governance/` | Risks, roadmap, recommendations |
+| `docs/foundation/` | Principles, architecture philosophy, technology selection, naming, performance, versioning, evolution |
 
 Application code will be added under `apps/`, `packages/` and `infra/` per
 [the repository strategy](docs/delivery/11-repository-and-folder-strategy.md)

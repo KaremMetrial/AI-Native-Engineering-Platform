@@ -34,6 +34,14 @@ Load-bearing constraints that apply to nearly all work:
 - **Definition of done** (`docs/delivery/17-definition-of-done.md`) — work is not
   done at "code written" or "merged".
 
+Before making an architectural or technology decision, read
+`docs/foundation/23-architecture-philosophy.md` and
+`docs/foundation/24-technology-selection-strategy.md` — they govern how such
+decisions are made here, including the reversal-cost classification that
+determines how much rigour a decision needs.
+`docs/foundation/22-engineering-principles.md` states the principles *and their
+boundaries*; cite the boundary, not just the principle.
+
 Decisions are numbered globally (`D-nn`). Cite them when a change depends on or
 contradicts one. Reversing a numbered decision requires an ADR
 (`docs/architecture/adr/README.md`) merged before the implementation.
