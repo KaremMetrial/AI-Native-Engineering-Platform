@@ -67,6 +67,19 @@ specify the system that implements it.
 | [40 · AI Integration Architecture](architecture/design/40-ai-integration-architecture.md) | Workflow execution, context assembly pipeline, provider routing, streaming, guardrails, evaluation, cost metering |
 | [41 · Resilience and Failure Recovery](architecture/design/41-resilience-and-failure-recovery.md) | Failure taxonomy, resilience patterns, the degradation matrix, data recovery, reconciliation, failure injection |
 
+### Architecture — data
+
+| Doc | Covers |
+| --- | --- |
+| [42 · Entity Model and Ownership](architecture/data/42-entity-model-and-ownership.md) | Entity catalogue per context, relationship rules, no cross-context foreign keys, the ownership matrix |
+| [43 · Write and Read Models](architecture/data/43-write-and-read-models.md) | Selective CQRS, the write path, read model catalogue, projection mechanics, blue-green rebuilds, consistency budgets |
+| [44 · Data Flow Architecture](architecture/data/44-data-flow-architecture.md) | Eight lifecycle stages, ingestion trust and provenance, derivation, serving, export; worked flows for a requirement, an upload and telemetry |
+| [45 · Index and Partitioning Strategy](architecture/data/45-index-and-partitioning-strategy.md) | Index principles and types, access-pattern map, index budget, partition plan and lifecycle, graph traversal escalation path |
+| [46 · Retention, Soft Delete and Archiving](architecture/data/46-retention-soft-delete-and-archiving.md) | Why soft delete is not the default, tombstones, retention schedule, hot/warm/cold tiering, archival and restore |
+| [47 · Audit and Temporal Data](architecture/data/47-audit-and-temporal-data.md) | Audit vs events vs logs, the audit record model, hash-chained tamper evidence, selective temporal history, tenant-facing audit |
+| [48 · GDPR and Data Protection](architecture/data/48-gdpr-and-data-protection.md) | Controller/processor split, personal data localization, subject rights, crypto-shredding to reconcile erasure with immutable audit |
+| [49 · Backup, Recovery and DR](architecture/data/49-backup-recovery-and-disaster-recovery.md) | Backup topology per store, RPO/RTO per class, recovery scenarios, tenant-scoped restore, immutable backups, verification |
+
 ### Delivery
 
 | Doc | Covers |
@@ -158,6 +171,31 @@ document and refined by another — the "also" column shows where.
 | AI Integration | [40](architecture/design/40-ai-integration-architecture.md) | [10](architecture/10-ai-strategy.md) |
 | Failure Recovery | [41](architecture/design/41-resilience-and-failure-recovery.md) | [15](delivery/15-deployment-strategy.md) |
 
+### Data architecture topics
+
+| Topic | Primary | Also |
+| --- | --- | --- |
+| Entities | [42](architecture/data/42-entity-model-and-ownership.md) | [32](architecture/design/32-domain-model-and-ddd.md) |
+| Aggregates | [32](architecture/design/32-domain-model-and-ddd.md) | [43](architecture/data/43-write-and-read-models.md) |
+| Relationships | [42](architecture/data/42-entity-model-and-ownership.md) | [32](architecture/design/32-domain-model-and-ddd.md) |
+| Ownership | [42](architecture/data/42-entity-model-and-ownership.md) | [33](architecture/design/33-context-map-and-service-boundaries.md) |
+| Data Flow | [44](architecture/data/44-data-flow-architecture.md) | [35](architecture/design/35-event-architecture.md) |
+| Write Models | [43](architecture/data/43-write-and-read-models.md) | [32](architecture/design/32-domain-model-and-ddd.md) |
+| Read Models | [43](architecture/data/43-write-and-read-models.md) | [36](architecture/design/36-data-and-storage-architecture.md) |
+| Indexes Strategy | [45](architecture/data/45-index-and-partitioning-strategy.md) | [36](architecture/design/36-data-and-storage-architecture.md) |
+| Partitioning Strategy | [45](architecture/data/45-index-and-partitioning-strategy.md) | [08](architecture/08-scalability-strategy.md) |
+| Archiving Strategy | [46](architecture/data/46-retention-soft-delete-and-archiving.md) | — |
+| Soft Delete Strategy | [46](architecture/data/46-retention-soft-delete-and-archiving.md) | — |
+| Data Retention | [46](architecture/data/46-retention-soft-delete-and-archiving.md) | [36](architecture/design/36-data-and-storage-architecture.md) |
+| Audit Strategy | [47](architecture/data/47-audit-and-temporal-data.md) | [09](architecture/09-security-strategy.md) |
+| Backup Strategy | [49](architecture/data/49-backup-recovery-and-disaster-recovery.md) | [15](delivery/15-deployment-strategy.md) |
+| Disaster Recovery | [49](architecture/data/49-backup-recovery-and-disaster-recovery.md) | [41](architecture/design/41-resilience-and-failure-recovery.md) |
+| GDPR readiness | [48](architecture/data/48-gdpr-and-data-protection.md) | [09](architecture/09-security-strategy.md) |
+| Multi Tenant Strategy | [07](architecture/07-multi-tenancy-strategy.md) | [42](architecture/data/42-entity-model-and-ownership.md), [36](architecture/design/36-data-and-storage-architecture.md) |
+| Bounded Contexts | [03](product/03-core-modules-and-scope.md) | [33](architecture/design/33-context-map-and-service-boundaries.md), [42](architecture/data/42-entity-model-and-ownership.md) |
+| Performance considerations | [45](architecture/data/45-index-and-partitioning-strategy.md) | [26](foundation/26-performance-strategy.md) |
+| Future scalability | [08](architecture/08-scalability-strategy.md) | [45](architecture/data/45-index-and-partitioning-strategy.md), [46](architecture/data/46-retention-soft-delete-and-archiving.md) |
+
 ---
 
 ## Conventions
@@ -167,7 +205,7 @@ Risks, Dependencies, Future Improvements. Purpose and Scope let you judge
 relevance in seconds; Scope also states what a document deliberately does *not*
 cover, which is how the set avoids duplicating itself.
 
-**Decisions are numbered globally** (`D-01` … `D-459`) so they can be cited
+**Decisions are numbered globally** (`D-01` … `D-549`) so they can be cited
 precisely from anywhere — other documents, ADRs, code review, commit messages.
 Principles carry `P-n` identifiers in [22](foundation/22-engineering-principles.md).
 

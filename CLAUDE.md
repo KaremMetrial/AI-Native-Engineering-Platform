@@ -36,8 +36,16 @@ Load-bearing constraints that apply to nearly all work:
 
 The detailed design lives in `docs/architecture/design/` (C4 context, containers
 and components; DDD and context map; communication, events, data, caching and
-queues, observability, security, AI integration, resilience). Read the documents
-covering the area you are changing before changing it.
+queues, observability, security, AI integration, resilience) and
+`docs/architecture/data/` (entity model and ownership, read/write models, data
+flow, indexes and partitioning, retention and soft delete, audit, GDPR, backup
+and DR). Read the documents covering the area you are changing before changing
+it.
+
+Three data rules are violated most often and are worth knowing before you touch
+the schema: **no foreign keys across bounded-context boundaries** (D-461), **soft
+delete is not the default and always pairs with a sweeper** (D-502), and
+**personal data is localized, never denormalized into other tables** (D-528).
 
 Before making an architectural or technology decision, read
 `docs/foundation/23-architecture-philosophy.md` and
