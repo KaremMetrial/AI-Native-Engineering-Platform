@@ -34,6 +34,11 @@ Load-bearing constraints that apply to nearly all work:
 - **Definition of done** (`docs/delivery/17-definition-of-done.md`) — work is not
   done at "code written" or "merged".
 
+The detailed design lives in `docs/architecture/design/` (C4 context, containers
+and components; DDD and context map; communication, events, data, caching and
+queues, observability, security, AI integration, resilience). Read the documents
+covering the area you are changing before changing it.
+
 Before making an architectural or technology decision, read
 `docs/foundation/23-architecture-philosophy.md` and
 `docs/foundation/24-technology-selection-strategy.md` — they govern how such

@@ -46,6 +46,27 @@ leaves.
 | [10 · AI Strategy](architecture/10-ai-strategy.md) | Grounding, prompt management, model routing, evaluation, guardrails, cost governance |
 | [ADRs](architecture/adr/README.md) | Decision records from implementation onward, and the process for writing them |
 
+### Architecture — detailed design
+
+The C4-structured design. Where `04`–`10` set architectural strategy, these
+specify the system that implements it.
+
+| Doc | Covers |
+| --- | --- |
+| [29 · System Context](architecture/design/29-system-context.md) | C4 L1 — actors, external systems, trust zones, perimeter data flows, criticality classification |
+| [30 · Container Architecture](architecture/design/30-container-architecture.md) | C4 L2 — every deployable and data container: responsibility, technology, interfaces, scaling, failure impact |
+| [31 · Component Architecture](architecture/design/31-component-architecture.md) | C4 L3 — Core API, AI service, workers, realtime gateway internals; request and job pipelines |
+| [32 · Domain Model and DDD](architecture/design/32-domain-model-and-ddd.md) | Aggregate design rules, consistency boundaries, tactical patterns, the Delivery Graph model |
+| [33 · Context Map and Service Boundaries](architecture/design/33-context-map-and-service-boundaries.md) | Strategic DDD — integration patterns between contexts, and when a module becomes a service |
+| [34 · Communication Architecture](architecture/design/34-communication-architecture.md) | Sync/async styles, protocols, timeout and retry budgets, idempotency, backpressure, process managers |
+| [35 · Event Architecture](architecture/design/35-event-architecture.md) | Event taxonomy, envelope, the transactional outbox, delivery semantics, ordering, DLQ, replay, catalogue |
+| [36 · Data and Storage Architecture](architecture/design/36-data-and-storage-architecture.md) | Data tiers, table categories, partitioning, indexing, blobs, vectors, search, retention, tenant deletion |
+| [37 · Caching and Queueing](architecture/design/37-caching-and-queueing-architecture.md) | Cache layers, key namespacing, invalidation, stampede protection; queue topology, fairness, retry, DLQ |
+| [38 · Observability Architecture](architecture/design/38-observability-architecture.md) | Telemetry pipeline, trace design, async context propagation, log design, metric cardinality, sampling, alerting |
+| [39 · Security Architecture](architecture/design/39-security-architecture.md) | Trust zones, network segmentation, token and tenant-context flow, service auth, the untrusted content path |
+| [40 · AI Integration Architecture](architecture/design/40-ai-integration-architecture.md) | Workflow execution, context assembly pipeline, provider routing, streaming, guardrails, evaluation, cost metering |
+| [41 · Resilience and Failure Recovery](architecture/design/41-resilience-and-failure-recovery.md) | Failure taxonomy, resilience patterns, the degradation matrix, data recovery, reconciliation, failure injection |
+
 ### Delivery
 
 | Doc | Covers |
@@ -112,6 +133,31 @@ document and refined by another — the "also" column shows where.
 | Versioning Strategy | [27](foundation/27-versioning-strategy.md) | [12](delivery/12-development-strategy.md) |
 | Future Evolution Strategy | [28](foundation/28-future-evolution-strategy.md) | [23](foundation/23-architecture-philosophy.md), [24](foundation/24-technology-selection-strategy.md) |
 
+### Architecture design topics
+
+| Topic | Primary | Also |
+| --- | --- | --- |
+| High Level Architecture | [05](architecture/05-high-level-architecture.md) | [30](architecture/design/30-container-architecture.md) |
+| System Context | [29](architecture/design/29-system-context.md) | — |
+| Containers | [30](architecture/design/30-container-architecture.md) | [15](delivery/15-deployment-strategy.md) |
+| Components | [31](architecture/design/31-component-architecture.md) | — |
+| Modules | [03](product/03-core-modules-and-scope.md) | [11](delivery/11-repository-and-folder-strategy.md), [31](architecture/design/31-component-architecture.md) |
+| DDD | [32](architecture/design/32-domain-model-and-ddd.md) | [33](architecture/design/33-context-map-and-service-boundaries.md) |
+| Bounded Contexts | [03](product/03-core-modules-and-scope.md) | [33](architecture/design/33-context-map-and-service-boundaries.md) |
+| Service Boundaries | [33](architecture/design/33-context-map-and-service-boundaries.md) | [05](architecture/05-high-level-architecture.md) |
+| Communication | [34](architecture/design/34-communication-architecture.md) | [30](architecture/design/30-container-architecture.md) |
+| Events | [35](architecture/design/35-event-architecture.md) | [27](foundation/27-versioning-strategy.md) |
+| Caching | [37](architecture/design/37-caching-and-queueing-architecture.md) | [26](foundation/26-performance-strategy.md), [08](architecture/08-scalability-strategy.md) |
+| Queues | [37](architecture/design/37-caching-and-queueing-architecture.md) | [30](architecture/design/30-container-architecture.md) |
+| Storage | [36](architecture/design/36-data-and-storage-architecture.md) | [07](architecture/07-multi-tenancy-strategy.md) |
+| Search | [36](architecture/design/36-data-and-storage-architecture.md) | [06](architecture/06-technology-decisions.md) |
+| Logging | [38](architecture/design/38-observability-architecture.md) | [09](architecture/09-security-strategy.md) |
+| Monitoring | [38](architecture/design/38-observability-architecture.md) | [15](delivery/15-deployment-strategy.md) |
+| Observability | [38](architecture/design/38-observability-architecture.md) | [04](architecture/04-non-functional-requirements.md) |
+| Security | [39](architecture/design/39-security-architecture.md) | [09](architecture/09-security-strategy.md), [07](architecture/07-multi-tenancy-strategy.md) |
+| AI Integration | [40](architecture/design/40-ai-integration-architecture.md) | [10](architecture/10-ai-strategy.md) |
+| Failure Recovery | [41](architecture/design/41-resilience-and-failure-recovery.md) | [15](delivery/15-deployment-strategy.md) |
+
 ---
 
 ## Conventions
@@ -121,7 +167,7 @@ Risks, Dependencies, Future Improvements. Purpose and Scope let you judge
 relevance in seconds; Scope also states what a document deliberately does *not*
 cover, which is how the set avoids duplicating itself.
 
-**Decisions are numbered globally** (`D-01` … `D-297`) so they can be cited
+**Decisions are numbered globally** (`D-01` … `D-459`) so they can be cited
 precisely from anywhere — other documents, ADRs, code review, commit messages.
 Principles carry `P-n` identifiers in [22](foundation/22-engineering-principles.md).
 
