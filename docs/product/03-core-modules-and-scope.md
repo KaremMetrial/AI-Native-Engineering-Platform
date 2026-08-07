@@ -79,12 +79,15 @@ external stakeholder access, SSO/SCIM.
 Foundational: every other context depends on tenant and actor resolution. Owns
 the isolation boundary all other modules inherit.
 
-**Build/buy note:** `metrial-auth` — an existing Laravel enterprise identity
-platform in-house — covers SSO, SAML/OIDC, SCIM, WebAuthn, ABAC and adaptive
-MFA. Evaluating it as the identity foundation is a Phase 0 decision requiring
-an ADR. Reusing it would remove months from the critical path and reduce the
-riskiest security surface; the evaluation must confirm its tenancy model
-composes with ours rather than assuming it does.
+**Build/buy note — resolved, see `docs/architecture/adr/0001-metrial-auth-evaluation-outcome.md`:**
+`metrial-auth` was described as an existing Laravel enterprise identity
+platform in-house, covering SSO, SAML/OIDC, SCIM, WebAuthn, ABAC and adaptive
+MFA, whose reuse would remove months from the critical path and reduce the
+riskiest security surface. The Phase 0 evaluation this note called for found
+the package's actual location unreachable — not incompatible, unreachable —
+after checking public registries and the project owner directly. ADR-0001
+closes this by building C1 identity in-house instead, designed against `07`'s
+tenancy model directly rather than adapted to an external package's.
 
 ### C2 — Discovery · Phase 1
 
@@ -307,7 +310,7 @@ decided here, once, rather than improvised per deal.
 | Delivery Graph kernel accumulates business logic | Becomes a god module and a bottleneck | ADR required for any kernel change; explicit "no business rules" rule |
 | 15 contexts is too many for an early team | Overhead exceeds benefit; thin, unfinished modules everywhere | Only 5 are Phase 1; the rest are named boundaries, not code to write now |
 | Phase 1 scope proves too narrow to sell | Delayed revenue | Validate the requirements-only slice with design partners before Phase 2 lock |
-| `metrial-auth` evaluation assumed rather than performed, and its tenancy model conflicts | Rework in the most expensive possible place | Phase 0 spike with a written ADR before any identity code is committed |
+| ~~`metrial-auth` evaluation assumed rather than performed, and its tenancy model conflicts~~ — **resolved**: evaluation performed, package unreachable, ADR-0001 builds Identity in-house | N/A | See `docs/architecture/adr/0001-metrial-auth-evaluation-outcome.md` |
 
 ## Dependencies
 

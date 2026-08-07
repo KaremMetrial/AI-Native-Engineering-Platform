@@ -176,8 +176,10 @@ because concrete requirements demand it, not for generality.
   instead of it.
 - **Permission checks are centralized** in a policy layer, never scattered as
   inline conditionals — otherwise they cannot be audited or tested as a set.
-- **`metrial-auth` evaluation** covers this model; its ABAC engine may satisfy
-  these requirements directly (D-20).
+- **The ABAC/RBAC policy layer is built in-house**, per
+  `docs/architecture/adr/0001-metrial-auth-evaluation-outcome.md` (D-20's
+  evaluation found `metrial-auth` unreachable, not unsuitable) — designed
+  against this model directly rather than adapted to an external engine.
 
 ---
 

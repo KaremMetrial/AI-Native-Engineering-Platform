@@ -153,8 +153,8 @@ most expensive mistake available, which is why Phase 0 exists.
 
 | Assumption | Risk if wrong | Validation |
 | --- | --- | --- |
-| **`metrial-auth` composes with our tenancy model** | TR-3 — months lost; a primary justification for the Laravel choice weakens materially | Phase 0 spike + ADR-0001, before any identity code |
-| **Postgres meets P-3 for graph traversal at realistic volume** | TR-2 — the most differentiating feature feels broken | Phase 0 benchmark on synthetic volume |
+| ~~**`metrial-auth` composes with our tenancy model**~~ — **validated: unreachable, not composable-or-not; resolved by building in-house** | TR-3 — realized: the Laravel reuse justification no longer holds | Done — `docs/architecture/adr/0001-metrial-auth-evaluation-outcome.md` |
+| ~~**Postgres meets P-3 for graph traversal at realistic volume**~~ — **validated: yes, p95 2-3ms vs. 1s budget** | TR-2 — avoided | Done — `docs/governance/22-graph-traversal-benchmark-results.md` |
 | **AI output quality can reach the G4 threshold** | CR-2 — the product has negative value | Phase 1 evaluation against golden sets and real design partners |
 | **Users will maintain graph links as a by-product of work** | BR-1 — the strategic bet is invalidated | G3 measured from Phase 1; developer adoption gated in Phase 3 |
 | **Agencies will pay for pre-sales acceleration** | BR-3 — beachhead too small | Phase 1 design partners; Phase 2 paying customers |
@@ -243,6 +243,17 @@ prevent.
 something argued at length here, the spike wins — length of argument is not
 evidence, and revising a well-reasoned document on one data point is exactly
 the behavior D-208 and the reversibility ledger are designed to make routine
+
+**Update, Phase 0 in progress:** two of the three central assumptions above
+have since been tested, and this recommendation was applied, not just stated.
+Graph traversal was measured, not assumed — p95 2-3ms against the 1s budget
+(`docs/governance/22-graph-traversal-benchmark-results.md`). `metrial-auth`
+was investigated, not assumed compatible — found unreachable rather than
+confirmed either way, and the resulting decision (build in-house) is recorded
+as a real finding, not a hope
+(`docs/architecture/adr/0001-metrial-auth-evaluation-outcome.md`). AI output
+quality (the third) remains untested — it requires an implemented workflow to
+evaluate against, which is Phase 1 scope, not Phase 0.
 rather than uncomfortable.
 
 ---

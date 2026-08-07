@@ -189,19 +189,22 @@ mode; explicit, recorded relaxation is the honest alternative.
 **Untested assumption, explicitly flagged.** The benchmark should happen in
 Phase 1, not when a customer complains.
 
-### TR-3 — `metrial-auth` incompatible with our tenancy model
+### TR-3 — `metrial-auth` incompatible with our tenancy model — RESOLVED
 
 | | |
 | --- | --- |
-| **Likelihood** | Medium |
-| **Impact** | High |
-| **Detail** | Reuse is a primary justification for the Laravel choice (`06`). If its tenancy model conflicts with RLS-based isolation, we lose months and the stack rationale weakens materially. |
-| **Mitigation** | Phase 0 evaluation spike with a written ADR **before** any identity code |
-| **Signal** | The spike itself |
-| **Forced decision** | Build identity ourselves, adapt the package, or reconsider the stack |
+| **Likelihood** | N/A — resolved |
+| **Impact** | Realized: the reuse benefit does not materialize, per below |
+| **Detail** | Reuse was a primary justification for the Laravel choice (`06`). The Phase 0 evaluation spike found the package unreachable — no public registry listing, no known repository, and the project owner could not locate it either — rather than finding it incompatible. The forced decision below was taken on that basis. |
+| **Mitigation** | Phase 0 evaluation spike with a written ADR **before** any identity code — completed; see `docs/architecture/adr/0001-metrial-auth-evaluation-outcome.md` |
+| **Signal** | The spike itself — fired: package unreachable |
+| **Forced decision** | **Build identity ourselves** (ADR-0001) |
 
-**The riskiest unvalidated assumption in the foundation**, and deliberately
-placed first in the roadmap.
+**Was the riskiest unvalidated assumption in the foundation**, and
+deliberately placed first in the roadmap. Closed by ADR-0001, not by finding
+the assumption true — the underlying uncertainty (does an RLS-based Identity
+module built to `07`'s spec work end to end?) moves to the Phase 1 Identity
+module's own implementation and testing, not to more Phase 0 investigation.
 
 ### TR-4 — Provider dependency (pricing, availability, terms)
 
@@ -391,7 +394,7 @@ able to defend.
 | ER-3 | Team too small for the quality bar | Medium | High |
 | **ER-6** | **Bounded agent steps drift toward unbounded scope** | Medium | High |
 | TR-1 | Postgres scaling ceiling | Low | High |
-| TR-3 | `metrial-auth` incompatible | Medium | High |
+| TR-3 | ~~`metrial-auth` incompatible~~ — resolved, see ADR-0001 | N/A | N/A |
 | **TR-7** | **Memory poisoning silently corrupts AI grounding** | Medium | High |
 | OR-1 | Dependency security incident | Medium | High |
 | BR-2 | Cold-start problem | High | High |

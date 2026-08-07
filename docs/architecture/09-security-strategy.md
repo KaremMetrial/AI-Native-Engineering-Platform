@@ -99,8 +99,9 @@ product's architecture and is analyzed separately below.
 - Session revocation must be immediate and global — a compromised session that
   survives a password reset is a common and serious failure.
 
-`metrial-auth` covers this surface (D-20); the Phase 0 evaluation determines
-whether we adopt or build.
+This surface is built in-house (D-20's Phase 0 evaluation found
+`metrial-auth` unreachable rather than adopting or rejecting it on merit —
+`docs/architecture/adr/0001-metrial-auth-evaluation-outcome.md`).
 
 ### Authorization
 

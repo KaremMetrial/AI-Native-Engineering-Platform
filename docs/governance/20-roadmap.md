@@ -60,11 +60,18 @@ before any product code depends on them.
 
 ### Exit criteria
 
-- Identity decision made and recorded in an ADR
-- Isolation model proven, including a test that RLS actually blocks a bypass
-- Graph traversal benchmarked against P-3 with a documented result
-- A trivial change flows from commit to staging through all gates
-- New engineer setup verified end to end
+- ~~Identity decision made and recorded in an ADR~~ — done:
+  `docs/architecture/adr/0001-metrial-auth-evaluation-outcome.md`
+- ~~Isolation model proven, including a test that RLS actually blocks a
+  bypass~~ — done: `apps/api/tests/Isolation/RlsIsolationTest.php`
+- ~~Graph traversal benchmarked against P-3 with a documented result~~ — done:
+  `docs/governance/22-graph-traversal-benchmark-results.md`
+- A trivial change flows from commit to staging through all gates — partial:
+  CI gates verified on real GitHub Actions runs (`.github/workflows/ci.yml`);
+  no staging environment exists yet, so only the "through all gates" half is
+  met
+- New engineer setup verified end to end — not yet independently verified as
+  a fresh clone → `tools/bootstrap.sh` → working state run
 
 **Why this phase exists, and why skipping it is the most expensive available
 mistake:** three foundational assumptions — the identity package, the isolation

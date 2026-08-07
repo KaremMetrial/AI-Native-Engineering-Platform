@@ -408,7 +408,7 @@ dependency in the critical path and another processor of tenant data).
 | Risk | Impact | Mitigation |
 | --- | --- | --- |
 | PHP limits senior hiring | Slower team growth | Codebase quality as the recruiting argument; Python and TypeScript roles broaden the funnel |
-| `metrial-auth` proves incompatible with our tenancy model | The strongest argument for Laravel weakens materially | Phase 0 evaluation spike with an ADR **before** committing — this is a stated assumption, not an established fact |
+| ~~`metrial-auth` proves incompatible with our tenancy model~~ — **resolved**: found unreachable, not incompatible; the strongest reuse argument for Laravel no longer holds in practice (see ADR-0001) | Realized — Identity is now built in-house | N/A |
 | Two backend languages fragment the team | Context-switching cost, uneven quality | Clear ownership boundaries; shared standards; the Python surface stays deliberately small |
 | pgvector outgrown sooner than expected | Retrieval performance degrades | Retrieval sits behind an interface; migration is planned, low-cost, and pre-considered |
 | Postgres write throughput becomes the ceiling | Forced sharding under pressure | Tenant-partitionable design from day one; read replicas first; monitor headroom against S-4 |
@@ -423,8 +423,10 @@ dependency in the critical path and another processor of tenant data).
 
 ## Future Improvements
 
-- Complete the `metrial-auth` evaluation spike and record the outcome as
-  ADR-0001 before any identity code is written.
+- ~~Complete the `metrial-auth` evaluation spike and record the outcome as
+  ADR-0001 before any identity code is written.~~ Done —
+  `docs/architecture/adr/0001-metrial-auth-evaluation-outcome.md`: unreachable,
+  Identity built in-house.
 - Benchmark graph traversal on realistic volumes to confirm Postgres meets P-3.
 - Re-evaluate self-hosted models for high-volume classification once usage
   patterns are known.

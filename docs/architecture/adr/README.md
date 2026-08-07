@@ -61,14 +61,15 @@ trace gets proposed again every six months.
 
 | ADR | Title | Status |
 | --- | --- | --- |
-| ADR-0001 *(no file yet)* | `metrial-auth` evaluation outcome | **Pending** — blocked on the Phase 0 evaluation spike (D-20, D-195); cannot be written honestly until that investigation actually happens |
+| [ADR-0001](0001-metrial-auth-evaluation-outcome.md) | `metrial-auth` evaluation outcome — build Identity in-house | Accepted — closes D-20, D-195, TR-3 |
 | [ADR-0002](0002-genuine-multi-provider-ai-support.md) | Genuine multi-provider AI support | Accepted — amends D-51 |
 | [ADR-0003](0003-bounded-agent-steps-within-workflows.md) | Bounded agent steps within workflows | Accepted — amends D-89 |
 
-ADR-0001 has no file yet: writing it now would mean fabricating findings about
-a real package we have not evaluated, which the charter's prohibition on faked
-implementations extends to faked decision records. It is created once the
-Phase 0 spike (`docs/governance/20-roadmap.md`) actually runs.
+ADR-0001 records a real finding, not a fabricated one: the package's actual
+location could not be established (checked against public package
+registries, and against the project owner directly) after genuine
+investigation, and that unresolvable inaccessibility — not an assumption
+about the package's merits — is the basis for building Identity in-house.
 
 ADR-0002 and ADR-0003 were writable immediately because the decisions they
 record — and their full reasoning, alternatives and risks — already existed in
