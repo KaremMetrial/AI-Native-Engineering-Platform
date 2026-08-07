@@ -16,15 +16,16 @@ assessment of the plan's weaknesses, non-negotiables, and immediate next steps.
 establishes.
 
 **A note on this document's age.** It was written when the foundation was 21
-documents — product, architecture strategy, delivery practice and governance.
-The set has since grown to a detailed C4 design, a full data architecture, and
-a full AI architecture (`docs/architecture/design/`, `docs/architecture/data/`,
-`docs/architecture/ai/` — docs 29 through 58), adding 364 further decisions on
-top of the 209 this document originally weighed. The assessment below has been
-revised in place to account for that — not rewritten, because the original
-judgment mostly still holds, but extended where the detailed design surfaced
-something genuinely load-bearing or genuinely uncertain that a leadership-level
-summary should not omit.
+documents — product, architecture strategy, delivery practice and governance —
+carrying 209 numbered decisions. The set has since grown to include engineering
+principles and method (docs 22–28), a detailed C4 design, a full data
+architecture, and a full AI architecture (`docs/architecture/design/`,
+`docs/architecture/data/`, `docs/architecture/ai/` — docs 29 through 58); the
+detailed-design layer alone (29–58) carries 363 further decisions, D-298
+through D-660. The assessment below has been revised in place to account for
+that — not rewritten, because the original judgment mostly still holds, but
+extended where the detailed design surfaced something genuinely load-bearing
+or genuinely uncertain that a leadership-level summary should not omit.
 
 ---
 
@@ -231,10 +232,11 @@ architecture and security implications before writing code, and every document
 in this set exists because a shortcut there is expensive later. But a
 foundation this thorough carries its own specific risk: **the volume and
 apparent rigor of the documentation can be mistaken for validation it does not
-constitute.** Sixty-one further decisions reasoned through on paper are still
-sixty-one hypotheses. A team that reads this set and concludes "this is clearly
-correct, it's so thorough" has made exactly the mistake `28`'s reversibility
-ledger and this document's own framing exist to prevent.
+constitute.** 452 further decisions, reasoned through on paper since the
+original 209, are still 452 hypotheses. A team that reads this set and
+concludes "this is clearly correct, it's so thorough" has made exactly the
+mistake `28`'s reversibility ledger and this document's own framing exist to
+prevent.
 
 **Recommendation:** treat the size of this documentation set as a reason for
 *more* scrutiny of Phase 0's results, not less. If a Phase 0 spike contradicts
