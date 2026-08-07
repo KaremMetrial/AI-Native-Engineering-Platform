@@ -80,6 +80,25 @@ specify the system that implements it.
 | [48 · GDPR and Data Protection](architecture/data/48-gdpr-and-data-protection.md) | Controller/processor split, personal data localization, subject rights, crypto-shredding to reconcile erasure with immutable audit |
 | [49 · Backup, Recovery and DR](architecture/data/49-backup-recovery-and-disaster-recovery.md) | Backup topology per store, RPO/RTO per class, recovery scenarios, tenant-scoped restore, immutable backups, verification |
 
+### Architecture — AI
+
+Multi-provider AI architecture: Claude, GPT, Gemini, DeepSeek and future models,
+with the deployment, evaluation and security discipline that makes routing
+across them safe. Amends D-51 (genuine multi-provider) and D-89 (bounded agent
+steps) — both changes reasoned through in place, not silently overridden.
+
+| Doc | Covers |
+| --- | --- |
+| [50 · AI Platform and Multi-Provider](architecture/ai/50-ai-platform-and-multi-provider.md) | Subsystem map, the multi-provider decision, model registry, capability modelling, normalization, per-tenant provider governance |
+| [51 · AI Gateway](architecture/ai/51-ai-gateway.md) | The mandatory single call path: request pipeline, routing algorithm, caching, rate limiting, failover, streaming, cost accounting |
+| [52 · Prompt Engine and Library](architecture/ai/52-prompt-engine-and-library.md) | Structured (never string) prompts, composition, deterministic rendering, cache-aware ordering, token budgeting, the governed library |
+| [53 · PromptOps — Versioning, Testing, Review, Deployment](architecture/ai/53-promptops-versioning-testing-review-deployment.md) | Immutable content-addressed versions, five test layers, review checklist, shadow evaluation, progressive rollout, emergency change |
+| [54 · PromptOps — Monitoring, Analytics, Cost, Optimization](architecture/ai/54-promptops-monitoring-analytics-cost-optimization.md) | Production quality proxies, drift detection, cost attribution chain, budget hierarchy, the propose-review-canary optimization loop |
+| [55 · Context, Memory and Knowledge Engines](architecture/ai/55-context-memory-and-knowledge-engines.md) | Why the three are separate, context assembly and reconciliation, governed durable memory against poisoning, tiered knowledge, hybrid retrieval |
+| [56 · Workflow and Agent Engine](architecture/ai/56-workflow-and-agent-engine.md) | The bounded-agent-step amendment to D-89, engine-controlled tool loop, tool registry, multi-agent coordination via the workflow graph |
+| [57 · Evaluation System](architecture/ai/57-evaluation-system.md) | Golden set architecture, decomposed rubric judges and their calibration, cross-provider evaluation, agent-step evaluation, human-in-the-loop |
+| [58 · AI and Prompt Security](architecture/ai/58-ai-and-prompt-security.md) | Injection defence across providers and agents, prompt library protection, provider data governance, abuse prevention, isolation as composition |
+
 ### Delivery
 
 | Doc | Covers |
@@ -195,6 +214,32 @@ document and refined by another — the "also" column shows where.
 | Bounded Contexts | [03](product/03-core-modules-and-scope.md) | [33](architecture/design/33-context-map-and-service-boundaries.md), [42](architecture/data/42-entity-model-and-ownership.md) |
 | Performance considerations | [45](architecture/data/45-index-and-partitioning-strategy.md) | [26](foundation/26-performance-strategy.md) |
 | Future scalability | [08](architecture/08-scalability-strategy.md) | [45](architecture/data/45-index-and-partitioning-strategy.md), [46](architecture/data/46-retention-soft-delete-and-archiving.md) |
+
+### AI architecture topics
+
+| Topic | Primary | Also |
+| --- | --- | --- |
+| Claude / GPT / Gemini / DeepSeek / future models | [50](architecture/ai/50-ai-platform-and-multi-provider.md) | [06](architecture/06-technology-decisions.md) |
+| AI Gateway | [51](architecture/ai/51-ai-gateway.md) | [40](architecture/design/40-ai-integration-architecture.md) |
+| Prompt Engine | [52](architecture/ai/52-prompt-engine-and-library.md) | — |
+| Prompt Library | [52](architecture/ai/52-prompt-engine-and-library.md) | — |
+| Context Engine | [55](architecture/ai/55-context-memory-and-knowledge-engines.md) | [40](architecture/design/40-ai-integration-architecture.md) |
+| Memory Engine | [55](architecture/ai/55-context-memory-and-knowledge-engines.md) | — |
+| Knowledge Engine | [55](architecture/ai/55-context-memory-and-knowledge-engines.md) | [36](architecture/design/36-data-and-storage-architecture.md) |
+| Workflow Engine | [56](architecture/ai/56-workflow-and-agent-engine.md) | [40](architecture/design/40-ai-integration-architecture.md) |
+| Agent System | [56](architecture/ai/56-workflow-and-agent-engine.md) | [10](architecture/10-ai-strategy.md) |
+| Evaluation System | [57](architecture/ai/57-evaluation-system.md) | [10](architecture/10-ai-strategy.md) |
+| Prompt Versioning | [53](architecture/ai/53-promptops-versioning-testing-review-deployment.md) | [27](foundation/27-versioning-strategy.md) |
+| Prompt Testing | [53](architecture/ai/53-promptops-versioning-testing-review-deployment.md) | [57](architecture/ai/57-evaluation-system.md) |
+| Prompt Review | [53](architecture/ai/53-promptops-versioning-testing-review-deployment.md) | [16](delivery/16-review-process-and-quality-gates.md) |
+| Prompt Deployment | [53](architecture/ai/53-promptops-versioning-testing-review-deployment.md) | [15](delivery/15-deployment-strategy.md) |
+| Prompt Monitoring | [54](architecture/ai/54-promptops-monitoring-analytics-cost-optimization.md) | [38](architecture/design/38-observability-architecture.md) |
+| Prompt Analytics | [54](architecture/ai/54-promptops-monitoring-analytics-cost-optimization.md) | — |
+| Prompt Cost Tracking | [54](architecture/ai/54-promptops-monitoring-analytics-cost-optimization.md) | — |
+| Prompt Security | [58](architecture/ai/58-ai-and-prompt-security.md) | [09](architecture/09-security-strategy.md), [39](architecture/design/39-security-architecture.md) |
+| Prompt Caching | [51](architecture/ai/51-ai-gateway.md) | [52](architecture/ai/52-prompt-engine-and-library.md) |
+| Prompt Routing | [51](architecture/ai/51-ai-gateway.md) | [50](architecture/ai/50-ai-platform-and-multi-provider.md) |
+| Prompt Optimization | [54](architecture/ai/54-promptops-monitoring-analytics-cost-optimization.md) | — |
 
 ---
 

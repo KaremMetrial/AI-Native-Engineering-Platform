@@ -36,11 +36,18 @@ Load-bearing constraints that apply to nearly all work:
 
 The detailed design lives in `docs/architecture/design/` (C4 context, containers
 and components; DDD and context map; communication, events, data, caching and
-queues, observability, security, AI integration, resilience) and
+queues, observability, security, AI integration, resilience),
 `docs/architecture/data/` (entity model and ownership, read/write models, data
 flow, indexes and partitioning, retention and soft delete, audit, GDPR, backup
-and DR). Read the documents covering the area you are changing before changing
-it.
+and DR), and `docs/architecture/ai/` (multi-provider gateway, prompt engine and
+library, PromptOps, context/memory/knowledge engines, bounded agents,
+evaluation, AI security). Read the documents covering the area you are changing
+before changing it.
+
+Two AI-architecture decisions amend earlier ones and each requires its own ADR
+before implementation, per `docs/architecture/ai/50-ai-platform-and-multi-provider.md`:
+genuine multi-provider support (amends D-51) and bounded agent steps within
+workflows (amends D-89, see `docs/architecture/ai/56-workflow-and-agent-engine.md`).
 
 Three data rules are violated most often and are worth knowing before you touch
 the schema: **no foreign keys across bounded-context boundaries** (D-461), **soft

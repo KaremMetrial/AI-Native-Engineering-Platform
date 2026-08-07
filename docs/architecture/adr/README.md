@@ -57,15 +57,16 @@ trace gets proposed again every six months.
 
 ## Index
 
-No ADRs have been written yet. ADR-0001 will record the outcome of the
-`metrial-auth` evaluation spike (D-20, D-195), which is the first item in Phase 0
-of `docs/governance/20-roadmap.md`.
+No ADRs have been written yet. Three are owed before their respective
+implementation work begins:
 
-New records are added to this index as they are accepted:
-
-| ADR | Title | Status |
+| ADR | Title | Trigger |
 | --- | --- | --- |
-| — | — | — |
+| ADR-0001 | `metrial-auth` evaluation outcome | D-20, D-195 — first item in Phase 0 of `docs/governance/20-roadmap.md` |
+| ADR-0002 | Genuine multi-provider AI support | D-550, amending D-51 — required before `docs/architecture/ai/50-ai-platform-and-multi-provider.md` is implemented |
+| ADR-0003 | Bounded agent steps within workflows | D-628, amending D-89 — required before `docs/architecture/ai/56-workflow-and-agent-engine.md` is implemented |
+
+New records are added to this index as they are accepted.
 
 ## Template
 

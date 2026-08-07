@@ -41,6 +41,7 @@ and rejected alternatives behind every decision.
 | [Architecture](docs/README.md#architecture) | NFRs, high-level architecture, technology decisions, multi-tenancy, scalability, security, AI strategy |
 | [Architecture design](docs/README.md#architecture--detailed-design) | C4 context/containers/components, DDD and context map, communication, events, data, caching and queues, observability, AI integration, resilience |
 | [Architecture data](docs/README.md#architecture--data) | Entity model and ownership, read/write models, data flow, indexing and partitioning, retention and soft delete, audit, GDPR, backup and DR |
+| [Architecture AI](docs/README.md#architecture--ai) | Multi-provider (Claude/GPT/Gemini/DeepSeek), gateway, prompt engine and library, PromptOps, context/memory/knowledge engines, bounded agents, evaluation, AI security |
 | [Delivery](docs/README.md#delivery) | Repository layout, development, coding standards, testing, deployment, review gates, definition of done, documentation |
 | [Governance](docs/README.md#governance) | Risk register, roadmap, final recommendations |
 | [Foundation](docs/README.md#foundation--method-and-durability) | Engineering principles, architecture philosophy, technology selection, naming, performance, versioning, future evolution |
@@ -50,7 +51,7 @@ decisions are made* and how the system stays changeable for a decade. A
 [topic coverage map](docs/README.md#topic-coverage-map) shows where each
 foundation subject is addressed.
 
-Decisions are numbered globally (`D-01`…`D-549`) so they can be cited precisely
+Decisions are numbered globally (`D-01`…`D-660`) so they can be cited precisely
 from code review, commit messages, and decision records.
 
 ## Repository Layout
@@ -64,6 +65,7 @@ from code review, commit messages, and decision records.
 | `docs/architecture/` | NFRs, architecture, technology, tenancy, scalability, security, AI |
 | `docs/architecture/design/` | C4 design set: context, containers, components, DDD, communication, events, data, observability, resilience |
 | `docs/architecture/data/` | Data architecture: entities and ownership, read/write models, data flow, indexes, retention, audit, GDPR, backup and DR |
+| `docs/architecture/ai/` | AI architecture: multi-provider, gateway, prompts, PromptOps, context/memory/knowledge, workflows and agents, evaluation, AI security |
 | `docs/architecture/adr/` | Architectural decision records (from implementation onward) |
 | `docs/delivery/` | Development, standards, testing, deployment, review, done, documentation |
 | `docs/governance/` | Risks, roadmap, recommendations |
