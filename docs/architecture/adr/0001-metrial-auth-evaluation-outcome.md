@@ -1,6 +1,6 @@
 # ADR-0001: `metrial-auth` Evaluation Outcome — Build Identity In-House
 
-- **Status:** Accepted
+- **Status:** Accepted — amended by [ADR-0004](0004-metrial-auth-reference-architecture-only.md) (design-reference use only; decision to build in-house unchanged)
 - **Date:** 2026-08-07
 - **Deciders:** Engineering leadership
 - **Supersedes:** none

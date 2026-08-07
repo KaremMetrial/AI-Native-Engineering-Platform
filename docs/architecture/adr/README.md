@@ -61,15 +61,23 @@ trace gets proposed again every six months.
 
 | ADR | Title | Status |
 | --- | --- | --- |
-| [ADR-0001](0001-metrial-auth-evaluation-outcome.md) | `metrial-auth` evaluation outcome — build Identity in-house | Accepted — closes D-20, D-195, TR-3 |
+| [ADR-0001](0001-metrial-auth-evaluation-outcome.md) | `metrial-auth` evaluation outcome — build Identity in-house | Accepted — closes D-20, D-195, TR-3; amended by ADR-0004 |
 | [ADR-0002](0002-genuine-multi-provider-ai-support.md) | Genuine multi-provider AI support | Accepted — amends D-51 |
 | [ADR-0003](0003-bounded-agent-steps-within-workflows.md) | Bounded agent steps within workflows | Accepted — amends D-89 |
+| [ADR-0004](0004-metrial-auth-reference-architecture-only.md) | `metrial-auth`'s documented architecture as design reference only | Accepted — amends ADR-0001, does not reverse it |
 
 ADR-0001 records a real finding, not a fabricated one: the package's actual
 location could not be established (checked against public package
 registries, and against the project owner directly) after genuine
 investigation, and that unresolvable inaccessibility — not an assumption
 about the package's merits — is the basis for building Identity in-house.
+
+ADR-0004 records a second, later finding: a Claude Code skill describing
+`metrial-auth`'s architecture in detail was found in this environment after
+ADR-0001 closed. Checked again under its real package name (`metrial/auth`)
+— still not installable (404 on Packagist). The skill is used as a design
+reference for the in-house build, not as evidence the package is now
+reachable.
 
 ADR-0002 and ADR-0003 were writable immediately because the decisions they
 record — and their full reasoning, alternatives and risks — already existed in
