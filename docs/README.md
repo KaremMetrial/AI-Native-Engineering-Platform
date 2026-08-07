@@ -250,7 +250,7 @@ Risks, Dependencies, Future Improvements. Purpose and Scope let you judge
 relevance in seconds; Scope also states what a document deliberately does *not*
 cover, which is how the set avoids duplicating itself.
 
-**Decisions are numbered globally** (`D-01` … `D-549`) so they can be cited
+**Decisions are numbered globally** (`D-01` … `D-663`) so they can be cited
 precisely from anywhere — other documents, ADRs, code review, commit messages.
 Principles carry `P-n` identifiers in [22](foundation/22-engineering-principles.md).
 

@@ -51,7 +51,7 @@ decisions are made* and how the system stays changeable for a decade. A
 [topic coverage map](docs/README.md#topic-coverage-map) shows where each
 foundation subject is addressed.
 
-Decisions are numbered globally (`D-01`…`D-660`) so they can be cited precisely
+Decisions are numbered globally (`D-01`…`D-663`) so they can be cited precisely
 from code review, commit messages, and decision records.
 
 ## Repository Layout

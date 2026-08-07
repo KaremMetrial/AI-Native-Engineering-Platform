@@ -11,7 +11,7 @@ repository. Read it before planning or writing any code.
 
 The charter sets the standard; `docs/` records the decisions. Before working on
 anything non-trivial, read the documents relevant to it — start from
-`docs/README.md`, which lists all 21 documents with what each covers.
+`docs/README.md`, which lists every document in the set with what each covers.
 
 Load-bearing constraints that apply to nearly all work:
 

@@ -6,10 +6,12 @@ One record per architecturally significant decision made **from the start of
 implementation onward**.
 
 The decisions taken while establishing the engineering foundation are recorded
-in the foundation documents themselves, numbered `D-01` through `D-209`. Those
-documents *are* the record of the initial architecture; duplicating them as
-ADRs would create two sources of truth for the same decisions, which the charter
-forbids.
+in the foundation documents themselves, numbered `D-01` through `D-663` as of
+the most recent addition (`docs/README.md` always has the current upper bound —
+this number moves every time a new foundation document lands, so treat it as a
+snapshot, not a promise). Those documents *are* the record of the initial
+architecture; duplicating them as ADRs would create two sources of truth for
+the same decisions, which the charter forbids.
 
 From Phase 0 onward, new significant decisions — and any reversal of a `D-nn`
 decision — are recorded here.
