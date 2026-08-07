@@ -4,7 +4,9 @@ The complete engineering foundation for the AI-Native Engineering Platform:
 what we are building, why it is built this way, and the standards it is built
 to.
 
-**Status:** Foundation complete, pending review. No implementation has begun.
+**Status:** Foundation complete. Phase 0 implementation in progress — see the
+root [`README.md`](../README.md#development) for the monorepo scaffold and
+verified commands, and `governance/20-roadmap.md` for what's left.
 
 ---
 
@@ -119,6 +121,7 @@ steps) — both changes reasoned through in place, not silently overridden.
 | [19 · Risk Register](governance/19-risk-register.md) | 26 risks across engineering, technical, operational and business, each with an early-warning signal |
 | [20 · Roadmap](governance/20-roadmap.md) | Phases 0–4 with objectives, deliverables and exit criteria |
 | [21 · Final Recommendations](governance/21-final-recommendations.md) | Load-bearing decisions, assumptions to validate, non-negotiables, next steps |
+| [22 · Graph Traversal Benchmark Results](governance/22-graph-traversal-benchmark-results.md) | Phase 0 spike result: P-3 measured at p95 2.57ms against a 1s budget, resolving TR-2 |
 
 ### Foundation — method and durability
 
@@ -250,7 +253,7 @@ Risks, Dependencies, Future Improvements. Purpose and Scope let you judge
 relevance in seconds; Scope also states what a document deliberately does *not*
 cover, which is how the set avoids duplicating itself.
 
-**Decisions are numbered globally** (`D-01` … `D-663`) so they can be cited
+**Decisions are numbered globally** (`D-01` … `D-665`) so they can be cited
 precisely from anywhere — other documents, ADRs, code review, commit messages.
 Principles carry `P-n` identifiers in [22](foundation/22-engineering-principles.md).
 

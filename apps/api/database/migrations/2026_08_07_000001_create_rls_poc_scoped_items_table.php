@@ -34,10 +34,14 @@ return new class extends Migration
             $table->index('tenant_id');
         });
 
-        // Table owner is platform_migrator (D-55); FORCE makes the policy
-        // apply even to the owner, not only to platform_app.
+        // Deliberately no FORCE ROW LEVEL SECURITY: the D-55 boundary this
+        // proves is about platform_app (the runtime role, which is never
+        // the owner and so is never exempt regardless of FORCE), not about
+        // platform_migrator. Migrator is the table owner and legitimately
+        // needs to bypass RLS for administrative/seeding writes; FORCE
+        // would block that without adding any protection platform_app
+        // doesn't already have.
         DB::statement('ALTER TABLE rls_poc_scoped_items ENABLE ROW LEVEL SECURITY');
-        DB::statement('ALTER TABLE rls_poc_scoped_items FORCE ROW LEVEL SECURITY');
 
         // NULLIF(...,'')::uuid: an unset or explicitly-cleared session
         // variable casts to NULL, and `tenant_id = NULL` is never true --
