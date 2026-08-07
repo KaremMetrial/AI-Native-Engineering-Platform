@@ -1,58 +1,50 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# apps/api
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel 13 (PHP 8.4) core API — modular monolith per
+[`docs/delivery/11-repository-and-folder-strategy.md`](../../docs/delivery/11-repository-and-folder-strategy.md).
 
-## About Laravel
+Organized by bounded context, then by layer (`app/Modules/<Context>/{Domain,
+Application,Infrastructure,Presentation}`), not by Laravel's default
+technical grouping — see `11` for why. `app/Tenancy/` holds tenant
+resolution and RLS binding, real and reusable regardless of the identity
+package decision (see `app/Tenancy/README.md`).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Commands
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+See the root [`README.md`](../../README.md#development) for the full,
+CI-verified command set. Short version:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer check   # Pint format check + PHPStan (max) + PHPUnit (5 suites)
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Database
 
-## Contributing
+Postgres only (D-138 — SQLite cannot enforce Row-Level Security, which is
+how tenant isolation is enforced, D-54). Two connections, two roles:
+`pgsql` (`platform_app`, the runtime role — no `BYPASSRLS`, doesn't own any
+table) and `pgsql_migrate` (`platform_migrator`, privileged, runs
+migrations). See
+[`docs/architecture/07-multi-tenancy-strategy.md`](../../docs/architecture/07-multi-tenancy-strategy.md).
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Tests
 
-## Code of Conduct
+Five suites, run via `composer test` or `php artisan test`:
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+| Suite | Mirrors |
+| --- | --- |
+| `Unit` | `Modules/*/Domain` |
+| `Integration` | `Modules/*/Infrastructure` |
+| `Feature` | API-level behavior |
+| `Architecture` | Boundary and layering rules |
+| `Isolation` | Tenant isolation (T-1) — see `tests/Isolation/README.md` |
 
-## Security Vulnerabilities
+## Known gap
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Static analysis runs PHPStan directly via a checksum-pinned PHAR
+(`tools/phpstan/install.sh`), not through Composer, because this
+development environment's GitHub access is scoped in a way that blocks
+`composer require phpstan/phpstan`. Larastan and Deptrac are not installed
+as a result — tracked openly in `tools/phpstan/README.md` (D-206), not
+silently dropped. Both install normally in an environment with full GitHub
+access, including this project's own CI.

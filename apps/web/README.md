@@ -1,32 +1,34 @@
-# React + TypeScript + Vite
+# apps/web
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React 19 + TypeScript (strict) + Vite SPA.
 
-Currently, two official plugins are available:
+## Commands
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+See the root [`README.md`](../../README.md#development) for the full,
+CI-verified command set. Short version:
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm run lint       # ESLint: strictTypeChecked + jsx-a11y (blocking, D-133) + react-hooks
+npm run typecheck  # tsc -b --noEmit, strict mode (D-132: no `any`)
+npm test           # Vitest + React Testing Library
+npm run build      # tsc -b && vite build
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+## Structure
+
+```
+src/
+├── app/        Application shell and routing
+├── features/   Feature modules (empty until a second feature justifies extraction)
+├── shared/     Cross-feature UI and utilities (empty until genuinely shared)
+└── lib/        Thin wrappers around external libraries
+```
+
+`features/`, `shared/`, and `lib/` each carry a `README.md` explaining why
+they're currently empty rather than pre-populated — extraction happens on
+the second real occurrence, not speculatively.
+
+## Linting
+
+ESLint (flat config), not Oxlint: `eslint-plugin-jsx-a11y` (accessibility,
+blocking per D-133) has no Oxlint equivalent, and it isn't optional here.
