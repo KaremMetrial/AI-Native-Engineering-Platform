@@ -3,7 +3,11 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [main]
+    # No `main` exists yet -- everything so far lives on the working branch
+    # (`claude/master-system-prompt-ayfacp`). Both are listed so this keeps
+    # running once main exists and a PR-merge workflow starts, without
+    # requiring a second edit right when it matters most.
+    branches: [main, claude/master-system-prompt-ayfacp]
 
 # Affected-target detection (D-104): each job is path-filtered so an
 # unrelated app's change doesn't pay another app's CI cost. Full per-app gate
