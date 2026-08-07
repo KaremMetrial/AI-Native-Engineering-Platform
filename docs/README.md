@@ -116,7 +116,7 @@ steps) — both changes reasoned through in place, not silently overridden.
 
 | Doc | Covers |
 | --- | --- |
-| [19 · Risk Register](governance/19-risk-register.md) | 24 risks across engineering, technical, operational and business, each with an early-warning signal |
+| [19 · Risk Register](governance/19-risk-register.md) | 26 risks across engineering, technical, operational and business, each with an early-warning signal |
 | [20 · Roadmap](governance/20-roadmap.md) | Phases 0–4 with objectives, deliverables and exit criteria |
 | [21 · Final Recommendations](governance/21-final-recommendations.md) | Load-bearing decisions, assumptions to validate, non-negotiables, next steps |
 

@@ -150,6 +150,17 @@ mode; explicit, recorded relaxation is the honest alternative.
 | **Signal** | Review comments repeatedly flagging the same misplacement |
 | **Forced decision** | Strengthen architecture tests; improve `CLAUDE.md` guidance |
 
+### ER-6 — Bounded agent steps drift toward unbounded scope
+
+| | |
+| --- | --- |
+| **Likelihood** | Medium |
+| **Impact** | High |
+| **Detail** | `docs/architecture/ai/56-workflow-and-agent-engine.md` (D-628, ADR-0003) deliberately reopened a capability D-89 had closed — agentic tool use — on the strength of engine-enforced bounds. Every one of those bounds is a configuration value: a tool allowlist, an iteration ceiling, a cost ceiling. None of them enforces itself; each is set by an engineer under the same delivery pressure that erodes every other standard in this register (see ER-1, ER-3). A allowlist widened "just for this one workflow," or an iteration ceiling raised because a legitimate goal kept timing out, quietly recreates the unbounded-scope risk the original D-89 prohibition existed to prevent — through configuration drift rather than through a reopened architectural decision. |
+| **Mitigation** | Write and irreversible-side-effect tools require explicit justification in review (D-632); no tool executes state changes directly regardless of allowlist contents (D-633); termination-reason distribution monitored continuously as a leading indicator (D-650) |
+| **Signal** | Growing tool allowlists per step; iteration-ceiling termination rate rising without a corresponding step redesign; write tools added to steps that previously had none |
+| **Forced decision** | Redesign the step's goal and decomposition, not widen its bounds — the same discipline D-89 originally demanded, now applied per step rather than as a blanket prohibition |
+
 ---
 
 ## Technical Risks
@@ -197,10 +208,11 @@ placed first in the roadmap.
 | | |
 | --- | --- |
 | **Likelihood** | Medium |
-| **Impact** | Medium |
-| **Mitigation** | Provider abstraction (D-51); evaluated fallbacks; graceful degradation (A-5) |
-| **Signal** | Provider pricing announcements; rising error or rate-limit rates |
-| **Forced decision** | Switch providers, or self-host for high-volume tasks |
+| **Impact** | **Medium, downgraded from what a single-provider posture would carry** |
+| **Detail** | D-550 (ADR-0002) amended the original single-provider-behind-an-abstraction design to genuine multi-provider support specifically because an untested abstraction is not a real mitigation. That amendment is architecturally complete but operationally unproven — no second adapter has been built or run in production, so the risk this register tracks now is narrower: not "we depend on one vendor" but "the multi-provider architecture has never been exercised end to end." |
+| **Mitigation** | Model registry with capability matching and per-tenant governance filtering (`50`); mandatory conformance suite before any adapter reaches `active` (D-561); failover restricted to evaluated candidates only, never an untested fallback (D-571, D-440) |
+| **Signal** | Provider pricing or terms announcements; rising error or rate-limit rates; **absence of a second `active` adapter by the time Phase 1 workflows ship is itself a signal that the mitigation remains theoretical** |
+| **Forced decision** | Prioritize building and evaluating the second adapter ahead of schedule, or accept the single-provider exposure this risk originally described for longer than planned |
 
 ### TR-5 — Prompt injection succeeds despite controls
 
@@ -208,13 +220,15 @@ placed first in the roadmap.
 | --- | --- |
 | **Likelihood** | Medium (attempts near-certain; success bounded) |
 | **Impact** | Medium — bounded by architecture, not eliminated |
-| **Mitigation** | Architectural containment (D-80, D-81); scope enforced outside the model; human approval gates; adversarial suite |
-| **Signal** | Adversarial suite failures; anomalous tool-use patterns |
-| **Forced decision** | Narrow tool access further; add content pre-screening |
+| **Mitigation** | Architectural containment (D-80, D-81), now specified in depth in `docs/architecture/ai/58-ai-and-prompt-security.md`: injection defence is enforced by our code, never delegated to provider-native safety behavior (D-651), because routing can select any of several providers per call and their resistance varies; for agent steps specifically, the tool-call boundary is engine-enforced rather than model-judged (D-652), and no tool executes a state change directly regardless of what an injected instruction convinces the model to attempt (D-653) |
+| **Signal** | Adversarial suite failures; anomalous tool-use patterns; a provider-specific gap in adversarial suite pass rate (would indicate the containment is not actually provider-agnostic in practice) |
+| **Forced decision** | Narrow tool access further; add content pre-screening; if provider-specific, demote that provider for workflows handling untrusted content |
 
 **Honest position:** injection is not fully solvable with current model
 technology. We contain rather than prevent, and the containment is architectural
-so it holds even when a specific defence fails.
+so it holds even when a specific defence fails, a specific provider's safety
+behavior varies, or a specific model reasons its way toward an instruction it
+was shown by hostile content.
 
 ### TR-6 — Model advancement obsoletes the AI layer
 
@@ -225,6 +239,17 @@ so it holds even when a specific defence fails.
 | **Detail** | Capability advances will make some of our workflow scaffolding unnecessary. This is expected and largely welcome. |
 | **Mitigation** | AI service is deliberately the most replaceable component (D-42); the graph, not the workflows, is the moat |
 | **Forced decision** | Rewrite workflows — a bounded, planned-for exercise |
+
+### TR-7 — Memory poisoning silently corrupts AI grounding
+
+| | |
+| --- | --- |
+| **Likelihood** | Medium |
+| **Impact** | High |
+| **Detail** | `docs/architecture/ai/55-context-memory-and-knowledge-engines.md` names this the single most important decision in that document (D-617) for a reason worth restating at the leadership level: a durable entity memory written unilaterally by a model — an inference from ambiguous discovery notes, promoted to "established fact" about a tenant — becomes grounding for every subsequent generation for that tenant. There is no error, no alert, and no natural mechanism by which anyone discovers the distortion; it is retrieved, reinforced, and eventually cited as fact until someone happens to notice the platform is confidently wrong. This is CR-2 (AI quality below usefulness threshold) with a specific, durable, self-reinforcing mechanism rather than a one-off bad generation. |
+| **Mitigation** | Durable memory writable only from an approved artifact, an explicit user statement, or a human-confirmed inference — never a unilateral model write (D-617); memory ranks below approved artifacts and platform knowledge in the authority order used for grounding (D-615); memory is user-inspectable and user-correctable (D-621); contradictions create supersessions, never silent overwrites (D-619) |
+| **Signal** | Rising rate of memory candidates rejected at confirmation; a tenant reporting the platform "knows something wrong" about them; edit-distance or approval-rate regression (`54`) concentrated in tenants with large memory stores rather than distributed evenly |
+| **Forced decision** | Suspend memory writes for the affected tenant pending audit; if the governance gate itself is implicated, treat as a CR-2-class incident and consider disabling the Memory Engine tier platform-wide pending a fix — grounding degrades to structural and knowledge tiers only, which is a quality regression, not an outage (consistent with A-5's degrade-not-fail posture) |
 
 ---
 
@@ -364,8 +389,10 @@ able to defend.
 | OR-2 | Data loss from untested restore | Low | Critical |
 | ER-1 | Module boundaries erode | High without enforcement | High |
 | ER-3 | Team too small for the quality bar | Medium | High |
+| **ER-6** | **Bounded agent steps drift toward unbounded scope** | Medium | High |
 | TR-1 | Postgres scaling ceiling | Low | High |
 | TR-3 | `metrial-auth` incompatible | Medium | High |
+| **TR-7** | **Memory poisoning silently corrupts AI grounding** | Medium | High |
 | OR-1 | Dependency security incident | Medium | High |
 | BR-2 | Cold-start problem | High | High |
 | BR-3 | Beachhead too small | Medium | High |
@@ -373,7 +400,7 @@ able to defend.
 | ER-4 | Two languages fragment the team | Medium | Medium |
 | ER-5 | AI code architecturally wrong | Medium | Medium (compounding) |
 | TR-2 | Graph traversal fails P-3 | Medium | Medium |
-| TR-4 | Provider dependency | Medium | Medium |
+| TR-4 | Provider dependency | Medium | Medium, downgraded from single-provider exposure — pending operational proof |
 | TR-5 | Prompt injection succeeds | Medium | Medium |
 | OR-3 | Alert fatigue | Medium | Medium |
 | OR-4 | Noisy neighbour | Medium | Medium |
@@ -381,6 +408,14 @@ able to defend.
 | BR-5 | Early enterprise requirements | Medium | Medium |
 | BR-6 | AI regulation | Medium | Medium |
 | TR-6 | Model advancement obsoletes AI layer | High | Low |
+
+**Two entries added since the original 24-risk register**, both surfaced by the
+detailed AI architecture (`docs/architecture/ai/50-58`) rather than by the
+original 21-document foundation: ER-6 and TR-7. Both are High impact, which is
+consistent with the pattern elsewhere in this register — the risks worth adding
+after the fact are the ones that would otherwise sit undetected inside a single
+document's local Risks section, invisible at the leadership level this register
+exists to serve.
 
 ---
 
@@ -393,6 +428,7 @@ able to defend.
 | D-193 | Register reviewed at every phase boundary | Risk profiles change as the system and company change |
 | D-194 | Team-capacity risk (ER-3) stated openly | Silent erosion of standards is the failure mode; explicit relaxation is honest |
 | D-195 | `metrial-auth` evaluation is the first roadmap item | Highest-impact unvalidated assumption |
+| D-661 | Register amended with ER-6 and TR-7 once the detailed AI architecture (`50`–`58`) existed to surface them | Exercises D-193's own review discipline rather than waiting for a phase boundary; both risks were visible in local document Risks sections but absent from the consolidated leadership view this register exists to provide |
 
 ## Risks
 
