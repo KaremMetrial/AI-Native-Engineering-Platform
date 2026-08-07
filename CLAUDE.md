@@ -80,5 +80,6 @@ charter.
 - Documentation changes in the same pull request as the code it describes.
 - Build, test, and lint commands are documented here as each part of the
   platform lands, alongside the code that introduces them. A command is
-  documented only once it exists and passes. **No implementation exists yet** —
-  the repository currently contains the engineering foundation only.
+  documented only once it exists and passes. **Phase 0 is in progress** — the
+  monorepo scaffold (`apps/api`, `apps/web`, `apps/ai`) is real and gated; the
+  verified commands are listed in `README.md`'s Development section.

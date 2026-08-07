@@ -1,0 +1,40 @@
+# Local development services. Started by tools/bootstrap.sh when Docker is
+# available; the same roles and databases are created natively as a fallback
+# when it is not (this repository's own sandbox has no Docker daemon).
+#
+# Three logical Redis roles share one instance here (cache, queue, pub/sub)
+# for local-dev simplicity -- docs/architecture/design/30-container-architecture.md
+# (D-307) separates these into distinct instances in staging/production,
+# where eviction-policy isolation (noeviction for the queue vs allkeys-lru
+# for the cache) actually matters. That separation is not meaningful within
+# one developer's laptop and is deliberately not replicated here.
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_local_dev_only
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:

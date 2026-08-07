@@ -1,0 +1,165 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Affected-target detection (D-104): each job is path-filtered so an
+# unrelated app's change doesn't pay another app's CI cost. Full per-app gate
+# content per docs/delivery/16-review-process-and-quality-gates.md Gate 2.
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      api: ${{ steps.filter.outputs.api }}
+      web: ${{ steps.filter.outputs.web }}
+      ai: ${{ steps.filter.outputs.ai }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            api:
+              - 'apps/api/**'
+            web:
+              - 'apps/web/**'
+            ai:
+              - 'apps/ai/**'
+
+  api:
+    needs: changes
+    if: needs.changes.outputs.api == 'true'
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres_ci_only
+          POSTGRES_DB: postgres
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    defaults:
+      run:
+        working-directory: apps/api
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.4"
+          extensions: pdo_pgsql, pgsql, redis, mbstring, ctype, fileinfo
+
+      # D-55: two roles, matching tools/bootstrap.sh and
+      # infra/docker/init-db.sh exactly. All three paths must agree.
+      - name: Create database roles and databases
+        run: |
+          PGPASSWORD=postgres_ci_only psql -h 127.0.0.1 -U postgres -v ON_ERROR_STOP=1 <<'SQL'
+          CREATE ROLE platform_migrator WITH LOGIN PASSWORD 'migrator_ci_only' CREATEDB;
+          CREATE ROLE platform_app WITH LOGIN PASSWORD 'app_ci_only'
+              NOSUPERUSER NOCREATEDB NOCREATEROLE NOBYPASSRLS;
+          CREATE DATABASE platform_dev OWNER platform_migrator;
+          CREATE DATABASE platform_test OWNER platform_migrator;
+          SQL
+          for db in platform_dev platform_test; do
+            PGPASSWORD=postgres_ci_only psql -h 127.0.0.1 -U postgres -d "$db" -v ON_ERROR_STOP=1 <<SQL
+          GRANT CONNECT ON DATABASE $db TO platform_app;
+          GRANT USAGE ON SCHEMA public TO platform_app;
+          ALTER DEFAULT PRIVILEGES FOR ROLE platform_migrator IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO platform_app;
+          ALTER DEFAULT PRIVILEGES FOR ROLE platform_migrator IN SCHEMA public GRANT USAGE, SELECT ON SEQUENCES TO platform_app;
+          SQL
+          done
+
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Install PHPStan
+        run: ../../tools/phpstan/install.sh
+
+      - name: Configure environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Format check (Pint)
+        run: composer format:check
+
+      - name: Static analysis (PHPStan, max level)
+        run: composer analyse
+
+      - name: Migrate (privileged connection)
+        env:
+          DB_HOST: 127.0.0.1
+          DB_MIGRATE_USERNAME: platform_migrator
+          DB_MIGRATE_PASSWORD: migrator_ci_only
+        run: |
+          php artisan migrate --database=pgsql_migrate --force
+          DB_DATABASE=platform_test php artisan migrate --database=pgsql_migrate --force
+
+      - name: Test (Unit, Integration, Feature, Architecture, Isolation)
+        env:
+          DB_HOST: 127.0.0.1
+          DB_USERNAME: platform_app
+          DB_PASSWORD: app_ci_only
+          DB_MIGRATE_USERNAME: platform_migrator
+          DB_MIGRATE_PASSWORD: migrator_ci_only
+          REDIS_HOST: 127.0.0.1
+        run: composer test
+
+  web:
+    needs: changes
+    if: needs.changes.outputs.web == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npm run format:check
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+
+  ai:
+    needs: changes
+    if: needs.changes.outputs.ai == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/ai
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e ".[dev]"
+      - run: ruff check .
+      - run: mypy src
+      - run: pytest
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

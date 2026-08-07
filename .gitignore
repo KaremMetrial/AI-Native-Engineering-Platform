@@ -1,0 +1,19 @@
+# Root-level ignores. Each app also carries its own .gitignore for
+# ecosystem-specific artifacts (vendor/, node_modules/, .venv/, etc.) --
+# this file covers what's common across the monorepo.
+
+.DS_Store
+Thumbs.db
+
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+*.log
+.env
+.env.local
+.env.*.local
+
+# Downloaded, checksum-verified tools -- never committed, see
+# tools/phpstan/README.md.
+.tools/

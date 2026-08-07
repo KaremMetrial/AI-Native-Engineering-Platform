@@ -1,0 +1,25 @@
+parameters:
+    # Maximum strictness from commit one -- D-127. Retrofitting strictness
+    # onto an existing codebase is a project; starting here is free.
+    level: max
+    paths:
+        - app
+        - routes
+        - database
+    # config/ is deliberately excluded, not silently: every value read via
+    # Laravel's env() helper is typed `mixed`, and Laravel's own stock config
+    # files (unmodified by us) cast those values to string/int throughout.
+    # Larastan ships stub types that resolve this correctly; plain PHPStan
+    # cannot. Analysing config/ today produces 15 errors, all inside
+    # Laravel's own generated files, none in code we wrote -- see
+    # tools/phpstan/README.md for the tracked Larastan gap this stems from.
+    tmpDir: .tools/phpstan-cache
+    ignoreErrors: []
+    excludePaths:
+        # Stock Laravel scaffold, unmodified: Artisan::command()'s closure
+        # binds $this to the command instance at runtime, a Laravel-specific
+        # dynamic pattern only Larastan's stubs resolve correctly. Same
+        # tracked gap as the config/ exclusion above -- not a suppression of
+        # anything we wrote.
+        - routes/console.php
+

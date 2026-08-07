@@ -6,8 +6,10 @@ single sentence to a delivered, maintained product — keeping every artifact
 deployment) linked in one traceable graph, with AI as a governed participant in
 the lifecycle.
 
-**Status: engineering foundation complete, pending review. No implementation
-has begun.**
+**Status: engineering foundation complete. Phase 0 in progress** —
+`docs/governance/20-roadmap.md`. Monorepo scaffold is up (`apps/api`,
+`apps/web`, `apps/ai`, all gated); the RLS isolation and graph-traversal
+spikes are next.
 
 ## Start Here
 
@@ -70,10 +72,40 @@ from code review, commit messages, and decision records.
 | `docs/delivery/` | Development, standards, testing, deployment, review, done, documentation |
 | `docs/governance/` | Risks, roadmap, recommendations |
 | `docs/foundation/` | Principles, architecture philosophy, technology selection, naming, performance, versioning, evolution |
+| `apps/api/` | Laravel 13 core API (PHP 8.4) — modular monolith per `docs/delivery/11` |
+| `apps/web/` | React + TypeScript + Vite SPA |
+| `apps/ai/` | Python FastAPI AI orchestration service |
+| `packages/` | Shared contracts, UI components, tooling config — empty until genuinely shared |
+| `infra/docker/` | Local development services (Postgres, Redis) |
+| `infra/terraform/` | Cloud infrastructure as code — not yet populated, no target environment exists |
+| `tools/` | Bootstrap script, PHPStan installer |
 
-Application code will be added under `apps/`, `packages/` and `infra/` per
-[the repository strategy](docs/delivery/11-repository-and-folder-strategy.md)
-once the foundation is approved and Phase 0 begins.
+Structure follows [the repository strategy](docs/delivery/11-repository-and-folder-strategy.md).
+Setup: `./tools/bootstrap.sh` (one command — starts services, creates the
+database roles in `docs/architecture/07-multi-tenancy-strategy.md`, runs
+migrations, installs all three apps' dependencies).
+
+## Development
+
+Verified working as of this scaffold. Every command below is what CI runs.
+
+```
+# apps/api
+cd apps/api && composer check        # format:check + analyse (PHPStan max) + test
+
+# apps/web
+cd apps/web && npm run lint && npm run typecheck && npm test && npm run build
+
+# apps/ai
+cd apps/ai && . .venv/bin/activate && ruff check . && mypy src && pytest
+```
+
+**Known gap, tracked openly (D-206):** `apps/api` static analysis runs on
+PHPStan directly (via `tools/phpstan/install.sh`, not Composer — see
+`tools/phpstan/README.md`), without Larastan's Laravel-aware rules or
+Deptrac's module-boundary enforcement (D-225). Both are blocked by this
+environment's GitHub access scope, not by a technical or design problem;
+they install normally once run somewhere with full GitHub access.
 
 ## Contributing
 
