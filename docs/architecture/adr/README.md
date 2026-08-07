@@ -57,14 +57,23 @@ trace gets proposed again every six months.
 
 ## Index
 
-No ADRs have been written yet. Three are owed before their respective
-implementation work begins:
-
-| ADR | Title | Trigger |
+| ADR | Title | Status |
 | --- | --- | --- |
-| ADR-0001 | `metrial-auth` evaluation outcome | D-20, D-195 — first item in Phase 0 of `docs/governance/20-roadmap.md` |
-| ADR-0002 | Genuine multi-provider AI support | D-550, amending D-51 — required before `docs/architecture/ai/50-ai-platform-and-multi-provider.md` is implemented |
-| ADR-0003 | Bounded agent steps within workflows | D-628, amending D-89 — required before `docs/architecture/ai/56-workflow-and-agent-engine.md` is implemented |
+| ADR-0001 *(no file yet)* | `metrial-auth` evaluation outcome | **Pending** — blocked on the Phase 0 evaluation spike (D-20, D-195); cannot be written honestly until that investigation actually happens |
+| [ADR-0002](0002-genuine-multi-provider-ai-support.md) | Genuine multi-provider AI support | Accepted — amends D-51 |
+| [ADR-0003](0003-bounded-agent-steps-within-workflows.md) | Bounded agent steps within workflows | Accepted — amends D-89 |
+
+ADR-0001 has no file yet: writing it now would mean fabricating findings about
+a real package we have not evaluated, which the charter's prohibition on faked
+implementations extends to faked decision records. It is created once the
+Phase 0 spike (`docs/governance/20-roadmap.md`) actually runs.
+
+ADR-0002 and ADR-0003 were writable immediately because the decisions they
+record — and their full reasoning, alternatives and risks — already existed in
+`docs/architecture/ai/50-ai-platform-and-multi-provider.md` and
+`docs/architecture/ai/56-workflow-and-agent-engine.md` respectively. Writing
+them was extracting an existing, fully-argued decision into the formal,
+immutable record the process requires — not originating a new one.
 
 New records are added to this index as they are accepted.
 
