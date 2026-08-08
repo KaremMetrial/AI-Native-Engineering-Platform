@@ -7,3 +7,4 @@ require __DIR__.'/identity.php';
 require __DIR__.'/graph.php';
 require __DIR__.'/discovery.php';
 require __DIR__.'/requirements.php';
+require __DIR__.'/ai_orchestration.php';

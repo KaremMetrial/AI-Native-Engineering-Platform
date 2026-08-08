@@ -1,5 +1,6 @@
 <?php
 
+use App\AiOrchestration\Infrastructure\AiOrchestrationServiceProvider;
 use App\Discovery\Infrastructure\DiscoveryServiceProvider;
 use App\Graph\Infrastructure\GraphServiceProvider;
 use App\Identity\Infrastructure\IdentityServiceProvider;
@@ -14,4 +15,5 @@ return [
     GraphServiceProvider::class,
     DiscoveryServiceProvider::class,
     RequirementsServiceProvider::class,
+    AiOrchestrationServiceProvider::class,
 ];
