@@ -1,5 +1,6 @@
 <?php
 
+use App\Discovery\Infrastructure\DiscoveryServiceProvider;
 use App\Graph\Infrastructure\GraphServiceProvider;
 use App\Identity\Infrastructure\IdentityServiceProvider;
 use App\Providers\AppServiceProvider;
@@ -10,4 +11,5 @@ return [
     TenancyServiceProvider::class,
     IdentityServiceProvider::class,
     GraphServiceProvider::class,
+    DiscoveryServiceProvider::class,
 ];
