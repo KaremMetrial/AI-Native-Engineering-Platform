@@ -7,6 +7,7 @@ namespace Tests\Integration;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /**
@@ -27,7 +28,10 @@ class DatabaseConnectionTest extends TestCase
     {
         $this->assertSame('pgsql', DB::connection()->getDriverName());
 
-        $id = DB::table('users')->insertGetId([
+        $id = (string) Str::uuid();
+
+        DB::table('users')->insert([
+            'id' => $id,
             'name' => 'Harness Probe',
             'email' => 'harness-probe@example.test',
             'password' => 'unused',

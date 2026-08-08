@@ -12,9 +12,16 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            // UUID, not autoincrement: users are a shared-kernel entity
+            // (docs/architecture/data/42-entity-model-and-ownership.md)
+            // referenced as a plain identifier from other contexts (D-461)
+            // and across the tenant-promotion path (07); a sequential
+            // integer leaks row-count/growth-rate and collides more easily
+            // across contexts than a UUID does.
+            $table->uuid('id')->primary();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('status')->default('active');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
@@ -29,7 +36,7 @@ return new class extends Migration
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
-            $table->foreignId('user_id')->nullable()->index();
+            $table->uuid('user_id')->nullable()->index();
             $table->string('ip_address', 45)->nullable();
             $table->text('user_agent')->nullable();
             $table->longText('payload');

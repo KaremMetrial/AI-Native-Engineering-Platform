@@ -26,9 +26,25 @@ final class TenantContext
         $this->tenantId = $tenantId;
     }
 
+    /**
+     * Binds the authenticated actor's own user id, independent of any
+     * tenant. Exists for exactly one bootstrapping problem: resolving
+     * "which tenants does this user belong to" before any tenant is
+     * known, which a purely tenant-scoped RLS policy cannot answer by
+     * design. `memberships`' RLS policy grants read visibility into a
+     * user's own rows across all tenants via this binding, while writes
+     * remain confined to whichever tenant is bound via bind() above --
+     * see database/migrations/*_identity_create_memberships_table.php.
+     */
+    public function bindActingUser(string $userId): void
+    {
+        DB::statement('SELECT set_config(?, ?, false)', ['app.user_id', $userId]);
+    }
+
     public function clear(): void
     {
         DB::statement('SELECT set_config(?, ?, false)', ['app.tenant_id', '']);
+        DB::statement('SELECT set_config(?, ?, false)', ['app.user_id', '']);
         $this->tenantId = null;
     }
 

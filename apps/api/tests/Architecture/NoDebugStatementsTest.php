@@ -7,10 +7,14 @@ namespace Tests\Architecture;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Layer-dependency and boundary-direction rules (D-225) are enforced by
- * Deptrac (`vendor/bin/deptrac analyse`, deptrac.yaml at the repo root) --
- * a purpose-built fitness-function tool, not duplicated here (P11: don't
- * re-implement what a dedicated tool already does precisely).
+ * Layer-dependency and boundary-direction rules (D-225) belong to Deptrac,
+ * a purpose-built fitness-function tool (P11: don't re-implement what a
+ * dedicated tool already does precisely) -- but Deptrac isn't installed in
+ * this environment (D-206, tools/phpstan/README.md: the same GitHub-access
+ * constraint that blocks Larastan). Until it is, the one layer rule that
+ * actually has something to enforce (Domain must stay framework-free,
+ * D-130) is covered directly in DomainLayerHasNoFrameworkDependencyTest.php
+ * rather than left unchecked.
  *
  * This suite holds architectural rules that are awkward to express as a
  * layer dependency: things about *what* code contains, not *what it
