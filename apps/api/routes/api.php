@@ -6,3 +6,4 @@ declare(strict_types=1);
 require __DIR__.'/identity.php';
 require __DIR__.'/graph.php';
 require __DIR__.'/discovery.php';
+require __DIR__.'/requirements.php';
