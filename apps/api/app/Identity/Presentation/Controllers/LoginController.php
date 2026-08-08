@@ -6,8 +6,8 @@ namespace App\Identity\Presentation\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Identity\Application\AuthenticateUser;
-use App\Identity\Presentation\ReadsValidatedStrings;
 use App\Identity\Presentation\Requests\LoginRequest;
+use App\Shared\ReadsValidatedStrings;
 use Illuminate\Http\JsonResponse;
 
 final class LoginController extends Controller

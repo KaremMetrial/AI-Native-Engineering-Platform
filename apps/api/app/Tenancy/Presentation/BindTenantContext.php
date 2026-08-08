@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Identity\Presentation;
+namespace App\Tenancy\Presentation;
 
 use App\Identity\Domain\MembershipRepository;
 use App\Identity\Domain\MembershipStatus;
@@ -18,6 +18,15 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
  * (docs/architecture/07-multi-tenancy-strategy.md, layers 1-3). Runs after
  * Sanctum's auth:sanctum middleware, so $request->user() is already the
  * authenticated EloquentUser.
+ *
+ * Lives in Tenancy, not Identity, even though it depends on Identity's
+ * MembershipRepository: per docs/delivery/11-repository-and-folder-strategy.md
+ * ("Only Tenancy and Shared are importable by all"), any module that
+ * needs tenant-scoped routes -- not just Identity -- needs to use this
+ * middleware, so it cannot live inside a regular bounded context's
+ * Presentation layer. Depending on Identity's Domain interface is the
+ * normal direction (a module consuming another module's public
+ * contract); the constraint only runs the other way.
  *
  * D-56: tenant is never taken from a client-supplied parameter as the
  * *authorizing* fact -- the `X-Tenant-Id` header below is only a

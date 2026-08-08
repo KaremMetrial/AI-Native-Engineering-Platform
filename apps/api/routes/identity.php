@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Identity\Presentation\BindTenantContext;
 use App\Identity\Presentation\Controllers\AssignRoleController;
 use App\Identity\Presentation\Controllers\LoginController;
 use App\Identity\Presentation\Controllers\LogoutController;
 use App\Identity\Presentation\Controllers\MeController;
 use App\Identity\Presentation\Controllers\RegisterController;
+use App\Tenancy\Presentation\BindTenantContext;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', RegisterController::class);

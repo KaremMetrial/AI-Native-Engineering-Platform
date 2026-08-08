@@ -7,8 +7,8 @@ namespace App\Identity\Presentation\Controllers;
 use App\Http\Controllers\Controller;
 use App\Identity\Application\RegisterTenant;
 use App\Identity\Application\RegisterTenantCommand;
-use App\Identity\Presentation\ReadsValidatedStrings;
 use App\Identity\Presentation\Requests\RegisterRequest;
+use App\Shared\ReadsValidatedStrings;
 use Illuminate\Http\JsonResponse;
 use RuntimeException;
 

@@ -22,7 +22,7 @@ use PHPUnit\Framework\TestCase;
  */
 class NoDebugStatementsTest extends TestCase
 {
-    private const FORBIDDEN = ['dd(', 'dump(', 'var_dump(', 'print_r(', 'ray('];
+    private const FORBIDDEN = ['dd', 'dump', 'var_dump', 'print_r', 'ray'];
 
     public function test_no_debug_statements_committed_in_app(): void
     {
@@ -40,8 +40,12 @@ class NoDebugStatementsTest extends TestCase
 
             $contents = file_get_contents($file->getPathname());
             foreach (self::FORBIDDEN as $needle) {
-                if (str_contains($contents, $needle)) {
-                    $violations[] = $file->getPathname()." contains {$needle}";
+                // Word-boundary match, not plain substring: a naive
+                // str_contains($contents, 'ray(') also matches is_array(,
+                // in_array(, array( -- a real false positive this suite
+                // hit against its own is_array() calls.
+                if (preg_match('/(?<![a-zA-Z0-9_])'.preg_quote($needle, '/').'\s*\(/', $contents) === 1) {
+                    $violations[] = $file->getPathname()." contains {$needle}(";
                 }
             }
         }
