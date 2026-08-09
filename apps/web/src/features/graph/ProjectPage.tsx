@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { getErrorMessage } from '../../shared/api/errors'
 import { TextField } from '../../shared/ui/TextField'
 import { createArtifact, getProject, listProjectArtifacts } from './api'
-import styles from './GraphPage.module.css'
+import styles from '../../shared/ui/ListPage.module.css'
 
 const createArtifactSchema = z.object({
   type: z.string().trim().min(1, 'Artifact type is required.').max(100),

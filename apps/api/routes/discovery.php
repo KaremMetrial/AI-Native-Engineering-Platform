@@ -7,6 +7,7 @@ use App\Discovery\Presentation\Controllers\CaptureAssumptionController;
 use App\Discovery\Presentation\Controllers\CaptureConstraintController;
 use App\Discovery\Presentation\Controllers\CompleteDiscoverySessionController;
 use App\Discovery\Presentation\Controllers\GetDiscoverySessionController;
+use App\Discovery\Presentation\Controllers\GetQuestionController;
 use App\Discovery\Presentation\Controllers\ListAssumptionsController;
 use App\Discovery\Presentation\Controllers\ListConstraintsController;
 use App\Discovery\Presentation\Controllers\ListDiscoverySessionsController;
@@ -23,6 +24,7 @@ Route::middleware(['auth:sanctum', BindTenantContext::class])->group(function ()
     Route::get('/discovery-sessions/{sessionId}', GetDiscoverySessionController::class);
     Route::post('/discovery-sessions/{sessionId}/questions', AddQuestionController::class);
     Route::get('/discovery-sessions/{sessionId}/questions', ListQuestionsController::class);
+    Route::get('/discovery-questions/{questionId}', GetQuestionController::class);
     Route::post('/discovery-questions/{questionId}/responses', RecordResponseController::class);
     Route::get('/discovery-questions/{questionId}/responses', ListResponsesController::class);
     Route::post('/discovery-sessions/{sessionId}/assumptions', CaptureAssumptionController::class);

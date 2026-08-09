@@ -9,4 +9,5 @@ components, hooks, API calls and types.
 import from each other — shared code moves to `shared/` instead.
 
 Shipped so far: `identity` (register/login/logout, session), `graph` (project
-workspace: projects, artifacts, versions, links, approvals).
+workspace: projects, artifacts, versions, links, approvals), `discovery`
+(sessions, questions, responses, assumptions, constraints).

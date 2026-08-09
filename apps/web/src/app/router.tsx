@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
+import { discoveryRoutes } from '../features/discovery/routes'
 import { graphRoutes } from '../features/graph/routes'
 import { identityRoutes } from '../features/identity/routes'
 import { ProtectedRoute } from '../shared/auth/ProtectedRoute'
@@ -27,6 +28,7 @@ export const router = createBrowserRouter([
         ),
       },
       ...graphRoutes,
+      ...discoveryRoutes,
     ],
   },
 ])

@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { getErrorMessage } from '../../shared/api/errors'
 import { TextField } from '../../shared/ui/TextField'
 import { createProject, listProjects } from './api'
-import styles from './GraphPage.module.css'
+import styles from '../../shared/ui/ListPage.module.css'
 
 const projectsQueryKey = ['projects'] as const
 

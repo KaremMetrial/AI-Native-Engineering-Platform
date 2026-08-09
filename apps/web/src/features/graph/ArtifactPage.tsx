@@ -12,7 +12,7 @@ import {
   listApprovals,
   listArtifactVersionLinks,
 } from './api'
-import styles from './GraphPage.module.css'
+import styles from '../../shared/ui/ListPage.module.css'
 
 const linkTypes: LinkType[] = [
   'derives_from',
