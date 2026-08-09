@@ -19,7 +19,8 @@ npm run build      # tsc -b && vite build
 ```
 src/
 ├── app/        Application shell and routing
-├── features/   Feature modules, one per bounded context (identity, graph, ...)
+├── features/   Feature modules, one per bounded context (identity, graph,
+│               discovery, requirements)
 ├── shared/     Cross-feature UI and utilities (API client, auth, TextField, test utils)
 └── lib/        Thin wrappers around external libraries (empty until genuinely needed)
 ```
