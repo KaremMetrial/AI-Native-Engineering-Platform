@@ -26,6 +26,25 @@ export const authMiddleware: Middleware = {
   },
 }
 
-export const apiClient = createClient<paths>({ baseUrl: '/api' })
+// A bare '/api' resolves fine in a real browser (relative fetches resolve
+// against the page's own origin implicitly), but Node's fetch/Request/URL
+// -- unlike a browser's -- have no notion of "current document" to
+// resolve a relative base against, and throw when tests stub fetch and
+// exercise the real request-construction path. Resolving explicitly
+// against window.location.origin is correct in both: same behavior in
+// the browser regardless of deployment domain, and a valid absolute URL
+// under jsdom (see vitest.config.ts's environmentOptions.jsdom.url).
+const baseUrl = new URL('/api', window.location.origin).toString()
+
+export const apiClient = createClient<paths>({
+  baseUrl,
+  // openapi-fetch reads its `fetch` option once at client-creation time
+  // (`fetch: baseFetch = globalThis.fetch` in its source), not fresh per
+  // call -- so a test that replaces `globalThis.fetch` after this module
+  // has already loaded would silently keep talking to the original.
+  // Resolving it lazily here means every call sees whatever
+  // `globalThis.fetch` currently is.
+  fetch: (input: Request) => globalThis.fetch(input),
+})
 
 apiClient.use(authMiddleware)

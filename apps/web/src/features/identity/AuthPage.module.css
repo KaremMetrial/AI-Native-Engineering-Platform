@@ -1,0 +1,31 @@
+.page {
+    max-width: 360px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.form {
+    text-align: left;
+}
+
+.form button {
+    width: 100%;
+    font: inherit;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+}
+
+.form button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.formError {
+    color: #d64545;
+    font-size: 14px;
+    margin: 0 0 16px;
+}

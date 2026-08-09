@@ -1,0 +1,31 @@
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    text-align: left;
+    margin-bottom: 16px;
+}
+
+.label {
+    font-size: 14px;
+    color: var(--text);
+}
+
+.input {
+    font: inherit;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text-h);
+}
+
+.input[aria-invalid='true'] {
+    border-color: #d64545;
+}
+
+.error {
+    margin: 0;
+    font-size: 13px;
+    color: #d64545;
+}

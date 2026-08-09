@@ -1,13 +1,18 @@
-// Harness proof: Vitest + React Testing Library render and query correctly.
-import { describe, expect, it } from 'vitest'
+// Harness proof: Vitest + React Testing Library render and query correctly,
+// exercising the real router end to end.
+import { beforeEach, describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import App from './App'
 
 describe('App', () => {
-  it('renders the platform shell', () => {
+  beforeEach(() => {
+    localStorage.clear()
+    window.history.pushState({}, '', '/')
+  })
+
+  it('redirects an unauthenticated visitor from the home page to login', async () => {
     render(<App />)
-    expect(
-      screen.getByRole('heading', { name: /ai-native engineering platform/i }),
-    ).toBeInTheDocument()
+
+    expect(await screen.findByRole('heading', { name: /log in/i })).toBeInTheDocument()
   })
 })
