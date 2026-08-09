@@ -10,4 +10,5 @@ import from each other — shared code moves to `shared/` instead.
 
 Shipped so far: `identity` (register/login/logout, session), `graph` (project
 workspace: projects, artifacts, versions, links, approvals), `discovery`
-(sessions, questions, responses, assumptions, constraints).
+(sessions, questions, responses, assumptions, constraints), `requirements`
+(documents, requirements with acceptance criteria, approvals).
