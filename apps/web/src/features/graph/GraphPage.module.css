@@ -1,0 +1,98 @@
+.page {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 24px 16px;
+}
+
+.backLink {
+    display: inline-block;
+    margin-bottom: 16px;
+}
+
+.list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.listItem {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.empty {
+    color: var(--text);
+    font-size: 14px;
+}
+
+.status {
+    font-size: 12px;
+    color: var(--text);
+    text-transform: uppercase;
+}
+
+.form {
+    border-top: 1px solid var(--border);
+    padding-top: 16px;
+    margin-top: 16px;
+}
+
+.form button {
+    font: inherit;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent);
+    color: #fff;
+    cursor: pointer;
+}
+
+.form button:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.formError {
+    color: #d64545;
+    font-size: 14px;
+    margin: 0 0 12px;
+}
+
+.textarea {
+    font: inherit;
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text-h);
+    box-sizing: border-box;
+    margin-bottom: 12px;
+}
+
+.select {
+    font: inherit;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text-h);
+    margin-bottom: 12px;
+}
+
+.section {
+    margin-bottom: 24px;
+}
+
+.sectionTitle {
+    font-size: 16px;
+    margin: 0 0 8px;
+}

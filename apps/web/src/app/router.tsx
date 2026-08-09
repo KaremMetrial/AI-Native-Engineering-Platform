@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
+import { graphRoutes } from '../features/graph/routes'
 import { identityRoutes } from '../features/identity/routes'
 import { ProtectedRoute } from '../shared/auth/ProtectedRoute'
 import { Layout } from './Layout'
@@ -11,7 +12,7 @@ import { HomePage } from './HomePage'
 //
 // Identity's own routes (login/register) are deliberately outside
 // ProtectedRoute -- everything else added here goes inside it as it
-// ships.
+// ships, nested under Layout so it shares the header/nav shell.
 export const router = createBrowserRouter([
   ...identityRoutes,
   {
@@ -25,6 +26,7 @@ export const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      ...graphRoutes,
     ],
   },
 ])

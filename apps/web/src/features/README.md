@@ -8,4 +8,5 @@ components, hooks, API calls and types.
 (`../app`), or framework-adjacent integrations (`../lib`). Features do not
 import from each other — shared code moves to `shared/` instead.
 
-Empty until the first feature (Requirements, per the Phase 1 roadmap) lands.
+Shipped so far: `identity` (register/login/logout, session), `graph` (project
+workspace: projects, artifacts, versions, links, approvals).

@@ -5,8 +5,8 @@ import { z } from 'zod'
 import { getErrorMessage, getFieldErrors } from '../../shared/api/errors'
 import { useRefreshSession } from '../../shared/auth/session'
 import { setToken } from '../../shared/auth/token'
+import { TextField } from '../../shared/ui/TextField'
 import { login } from './api'
-import { TextField } from './TextField'
 import styles from './AuthPage.module.css'
 
 const loginSchema = z.object({

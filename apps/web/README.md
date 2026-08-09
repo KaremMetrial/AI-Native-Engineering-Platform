@@ -19,14 +19,16 @@ npm run build      # tsc -b && vite build
 ```
 src/
 ├── app/        Application shell and routing
-├── features/   Feature modules (empty until a second feature justifies extraction)
-├── shared/     Cross-feature UI and utilities (empty until genuinely shared)
-└── lib/        Thin wrappers around external libraries
+├── features/   Feature modules, one per bounded context (identity, graph, ...)
+├── shared/     Cross-feature UI and utilities (API client, auth, TextField, test utils)
+└── lib/        Thin wrappers around external libraries (empty until genuinely needed)
 ```
 
-`features/`, `shared/`, and `lib/` each carry a `README.md` explaining why
-they're currently empty rather than pre-populated — extraction happens on
-the second real occurrence, not speculatively.
+`features/`, `shared/`, and `lib/` each carry a `README.md` explaining their
+scope and boundary rules. Code moves into `shared/` on its second real use
+by a different feature, not speculatively — `TextField` and the test render
+helpers made that move when `graph` needed what `identity` had already
+built.
 
 ## Linting
 
