@@ -3,4 +3,4 @@
 # reason to enforce or maintain it here.
 dist
 coverage
-src/lib/api/schema.ts
+src/shared/api/schema.ts

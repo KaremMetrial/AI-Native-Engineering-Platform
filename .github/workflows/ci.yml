@@ -166,8 +166,8 @@ jobs:
       - name: Verify generated API types are up to date
         run: |
           npm run contract:types
-          git diff --exit-code -- src/lib/api/schema.ts || {
-            echo "::error::src/lib/api/schema.ts is stale -- run 'npm run contract:types' in apps/web and commit the result."
+          git diff --exit-code -- src/shared/api/schema.ts || {
+            echo "::error::src/shared/api/schema.ts is stale -- run 'npm run contract:types' in apps/web and commit the result."
             exit 1
           }
 
