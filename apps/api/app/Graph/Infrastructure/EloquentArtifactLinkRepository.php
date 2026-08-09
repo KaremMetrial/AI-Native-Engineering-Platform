@@ -43,6 +43,17 @@ class EloquentArtifactLinkRepository implements ArtifactLinkRepository
         );
     }
 
+    public function findByFromVersion(string $versionId): array
+    {
+        return array_values(
+            EloquentArtifactLink::query()
+                ->where('from_version_id', $versionId)
+                ->get()
+                ->map(fn (EloquentArtifactLink $m): ArtifactLink => $this->toDomain($m))
+                ->all(),
+        );
+    }
+
     private function toDomain(EloquentArtifactLink $model): ArtifactLink
     {
         return new ArtifactLink(

@@ -13,12 +13,30 @@ across requirements, tasks, tests, and their approvals.
 appending new versions (no update path — D-336); linking two versions with
 a closed vocabulary of link types (D-338); recording an approval decision
 against a specific version (D-278); depth-bounded (≤5, P-3) reverse impact
-traversal.
+traversal; reading back everything above (list projects, get a project, list
+a project's artifacts, get an artifact with its version history, list a
+version's links and approvals) — the minimum read surface a client needs to
+use the writes, not the `Project` workspace deliverable below.
 
 **Out, deliberately** — later phases: artifact templates, diffing between
 versions, bulk import, the full `Project` workspace (membership, settings),
 anything beyond the six link types in `LinkType` (adding one requires an
 ADR per D-338).
+
+## Reads: direct repository queries, not a read model
+
+Every read above is served by a direct query against the same normalized
+tables the writes use — no projection. Per
+`docs/architecture/data/43-write-and-read-models.md`, a read model is
+justified only when at least two of five criteria hold (cross-context join,
+divergent shape, expensive query, read-heavy skew, acceptable staleness);
+none apply here — these are single-context "fetch this aggregate" and "list
+these entities filtered by tenant" reads, exactly what the write model
+serves best with strong consistency. `ProjectRepository::findAll()` and
+`ArtifactRepository::findAllForProject()` use `DB::table()` rather than
+Eloquent, for the same PHPStan-generics reason documented on
+`EloquentArtifactRepository::findById()`. `findAllForProject()` batches its
+version fetch in one query rather than one per artifact, to avoid N+1.
 
 ## Layout
 

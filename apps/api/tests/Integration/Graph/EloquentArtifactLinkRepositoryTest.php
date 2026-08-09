@@ -85,4 +85,33 @@ class EloquentArtifactLinkRepositoryTest extends TestCase
         $this->assertCount(1, $reverse);
         $this->assertSame($task->currentVersionId(), $reverse[0]->fromVersionId);
     }
+
+    public function test_find_by_from_version_finds_forward_links(): void
+    {
+        $tenantId = $this->createTenant();
+        $this->app->make(TenantContext::class)->bind($tenantId);
+        $projectId = $this->createProject($tenantId);
+        $userId = $this->createUser();
+        $artifacts = new EloquentArtifactRepository;
+
+        $requirement = Artifact::create((string) Str::uuid(), $tenantId, $projectId, 'srs', (string) Str::uuid(), 'req', $userId);
+        $artifacts->save($requirement);
+        $task = Artifact::create((string) Str::uuid(), $tenantId, $projectId, 'task', (string) Str::uuid(), 'task', $userId);
+        $artifacts->save($task);
+
+        $repository = new EloquentArtifactLinkRepository;
+        $repository->save(ArtifactLink::create(
+            (string) Str::uuid(),
+            $tenantId,
+            $task->currentVersionId(),
+            $requirement->currentVersionId(),
+            LinkType::Implements,
+            $userId,
+        ));
+
+        $forward = $repository->findByFromVersion($task->currentVersionId());
+
+        $this->assertCount(1, $forward);
+        $this->assertSame($requirement->currentVersionId(), $forward[0]->toVersionId);
+    }
 }

@@ -18,4 +18,12 @@ interface ArtifactLinkRepository
      * @return list<ArtifactLink>
      */
     public function findByToVersion(string $versionId): array;
+
+    /**
+     * Forward traversal, one hop: everything this version links *to* --
+     * the other half of a version's link neighborhood for a detail view.
+     *
+     * @return list<ArtifactLink>
+     */
+    public function findByFromVersion(string $versionId): array;
 }

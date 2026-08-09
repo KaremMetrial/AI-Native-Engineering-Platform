@@ -103,6 +103,65 @@ class EloquentArtifactRepository implements ArtifactRepository
         );
     }
 
+    public function findAllForProject(string $projectId): array
+    {
+        // Plain query builder, not Eloquent -- see findById's docblock:
+        // without Larastan (D-206) PHPStan's inference of chained
+        // Eloquent Builder generics is unreliable, and DB::table() has a
+        // single, well-typed stdClass-row contract instead.
+        $artifactRows = DB::table('artifacts')
+            ->where('project_id', $projectId)
+            ->orderBy('created_at')
+            ->get();
+
+        if ($artifactRows->isEmpty()) {
+            return [];
+        }
+
+        // One batched query for every artifact's versions instead of one
+        // query per artifact (N+1), grouped back out by artifact_id below.
+        $versionRows = DB::table('artifact_versions')
+            ->whereIn('artifact_id', $artifactRows->pluck('id'))
+            ->orderBy('artifact_id')
+            ->orderBy('version_number')
+            ->get();
+
+        $versionsByArtifactId = [];
+        foreach ($versionRows as $row) {
+            $artifactId = $this->requireString($row->artifact_id);
+            $versionsByArtifactId[$artifactId][] = $this->rowToVersion($row);
+        }
+
+        return array_values(
+            $artifactRows
+                ->map(fn (mixed $row): Artifact => $this->rowToArtifact($row, $versionsByArtifactId))
+                ->all(),
+        );
+    }
+
+    /**
+     * @param  array<string, list<ArtifactVersion>>  $versionsByArtifactId
+     */
+    private function rowToArtifact(mixed $row, array $versionsByArtifactId): Artifact
+    {
+        if (! $row instanceof stdClass) {
+            throw new RuntimeException('Expected a stdClass row from artifacts.');
+        }
+
+        $id = $this->requireString($row->id);
+
+        return new Artifact(
+            id: $id,
+            tenantId: $this->requireString($row->tenant_id),
+            projectId: $this->requireString($row->project_id),
+            type: $this->requireString($row->type),
+            currentVersionId: $this->optionalString($row->current_version_id),
+            status: ArtifactStatus::from($this->requireString($row->status)),
+            createdAt: new DateTimeImmutable($this->requireString($row->created_at)),
+            versions: $versionsByArtifactId[$id] ?? [],
+        );
+    }
+
     private function rowToVersion(mixed $row): ArtifactVersion
     {
         if (! $row instanceof stdClass) {

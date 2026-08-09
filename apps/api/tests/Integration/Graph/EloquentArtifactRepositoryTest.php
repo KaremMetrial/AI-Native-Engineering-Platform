@@ -73,4 +73,40 @@ class EloquentArtifactRepositoryTest extends TestCase
 
         $this->assertNull((new EloquentArtifactRepository)->findById((string) Str::uuid()));
     }
+
+    public function test_find_all_for_project_returns_each_artifact_with_its_versions(): void
+    {
+        $tenantId = $this->createTenant();
+        $this->app->make(TenantContext::class)->bind($tenantId);
+        $projectId = $this->createProject($tenantId);
+        $userId = $this->createUser();
+
+        $repository = new EloquentArtifactRepository;
+
+        $requirement = Artifact::create((string) Str::uuid(), $tenantId, $projectId, 'srs', (string) Str::uuid(), 'req v1', $userId);
+        $requirement->recordNewVersion((string) Str::uuid(), 'req v2', Lineage::human(), $userId);
+        $repository->save($requirement);
+
+        $task = Artifact::create((string) Str::uuid(), $tenantId, $projectId, 'task', (string) Str::uuid(), 'task v1', $userId);
+        $repository->save($task);
+
+        $found = $repository->findAllForProject($projectId);
+
+        $this->assertCount(2, $found);
+        $byId = [];
+        foreach ($found as $artifact) {
+            $byId[$artifact->id] = $artifact;
+        }
+        $this->assertCount(2, $byId[$requirement->id]->versions());
+        $this->assertCount(1, $byId[$task->id]->versions());
+    }
+
+    public function test_find_all_for_project_returns_an_empty_list_for_a_project_with_no_artifacts(): void
+    {
+        $tenantId = $this->createTenant();
+        $this->app->make(TenantContext::class)->bind($tenantId);
+        $projectId = $this->createProject($tenantId);
+
+        $this->assertSame([], (new EloquentArtifactRepository)->findAllForProject($projectId));
+    }
 }
