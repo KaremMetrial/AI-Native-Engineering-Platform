@@ -160,6 +160,17 @@ jobs:
       - run: npm test
       - run: npm run build
 
+      # Mirrors the api job's contract-drift check: schema.ts is
+      # generated from packages/contracts/openapi.json (D-110) and must
+      # not silently drift from it.
+      - name: Verify generated API types are up to date
+        run: |
+          npm run contract:types
+          git diff --exit-code -- src/lib/api/schema.ts || {
+            echo "::error::src/lib/api/schema.ts is stale -- run 'npm run contract:types' in apps/web and commit the result."
+            exit 1
+          }
+
   ai:
     needs: changes
     if: needs.changes.outputs.ai == 'true'

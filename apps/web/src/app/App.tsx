@@ -1,13 +1,16 @@
-// Root shell: routing, providers, layout and error boundaries land here as
-// they're built (docs/delivery/11-repository-and-folder-strategy.md). Nothing
-// feature-specific belongs in this file -- see ../features/README.md.
+import { QueryClientProvider } from '@tanstack/react-query'
+import { RouterProvider } from 'react-router-dom'
+import { queryClient } from './queryClient'
+import { router } from './router'
 
+// Root shell: providers and routing only. Nothing feature-specific
+// belongs in this file (docs/delivery/11-repository-and-folder-strategy.md)
+// -- see ../features/README.md.
 function App() {
   return (
-    <main>
-      <h1>AI-Native Engineering Platform</h1>
-      <p>Foundation scaffold. No product features implemented yet.</p>
-    </main>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   )
 }
 
