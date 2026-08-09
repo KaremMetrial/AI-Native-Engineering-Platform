@@ -6,6 +6,10 @@ namespace App\Discovery\Infrastructure;
 
 use App\Discovery\Domain\Constraint;
 use App\Discovery\Domain\ConstraintRepository;
+use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
+use RuntimeException;
+use stdClass;
 
 class EloquentConstraintRepository implements ConstraintRepository
 {
@@ -30,6 +34,16 @@ class EloquentConstraintRepository implements ConstraintRepository
         return $model === null ? null : $this->toDomain($model);
     }
 
+    public function findAllBySession(string $sessionId): array
+    {
+        $rows = DB::table('discovery_constraints')
+            ->where('session_id', $sessionId)
+            ->orderBy('created_at')
+            ->get();
+
+        return array_values($rows->map(fn (mixed $row): Constraint => $this->rowToDomain($row))->all());
+    }
+
     private function toDomain(EloquentConstraint $model): Constraint
     {
         return new Constraint(
@@ -40,5 +54,30 @@ class EloquentConstraintRepository implements ConstraintRepository
             createdBy: $model->created_by,
             createdAt: $model->created_at->toDateTimeImmutable(),
         );
+    }
+
+    private function rowToDomain(mixed $row): Constraint
+    {
+        if (! $row instanceof stdClass) {
+            throw new RuntimeException('Expected a stdClass row from discovery_constraints.');
+        }
+
+        return new Constraint(
+            id: $this->requireString($row->id),
+            tenantId: $this->requireString($row->tenant_id),
+            sessionId: $this->requireString($row->session_id),
+            statement: $this->requireString($row->statement),
+            createdBy: $this->requireString($row->created_by),
+            createdAt: new DateTimeImmutable($this->requireString($row->created_at)),
+        );
+    }
+
+    private function requireString(mixed $value): string
+    {
+        if (! is_string($value)) {
+            throw new RuntimeException('Expected a string column value.');
+        }
+
+        return $value;
     }
 }

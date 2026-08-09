@@ -11,4 +11,9 @@ interface QuestionRepository
     public function findById(string $id): ?Question;
 
     public function countBySession(string $sessionId): int;
+
+    /**
+     * @return list<Question>
+     */
+    public function findAllBySession(string $sessionId): array;
 }

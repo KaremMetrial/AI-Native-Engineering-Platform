@@ -54,4 +54,30 @@ class EloquentResponseRepositoryTest extends TestCase
 
         $this->assertNull((new EloquentResponseRepository)->findById((string) Str::uuid()));
     }
+
+    public function test_find_all_by_question_returns_only_that_questions_responses(): void
+    {
+        $tenantId = $this->createTenant();
+        $this->app->make(TenantContext::class)->bind($tenantId);
+        $projectId = $this->createProject($tenantId);
+        $userId = $this->createUser();
+        $sessionId = $this->createDiscoverySession($tenantId, $projectId, $userId);
+
+        $questionA = Question::ask((string) Str::uuid(), $tenantId, $sessionId, 'First?', 1, $userId);
+        (new EloquentQuestionRepository)->save($questionA);
+        $questionB = Question::ask((string) Str::uuid(), $tenantId, $sessionId, 'Second?', 2, $userId);
+        (new EloquentQuestionRepository)->save($questionB);
+
+        $repository = new EloquentResponseRepository;
+        $repository->save(Response::record((string) Str::uuid(), $tenantId, $questionA->id, 'Stakeholder A answer.', $userId));
+        $repository->save(Response::record((string) Str::uuid(), $tenantId, $questionA->id, 'Stakeholder B answer.', $userId));
+        $repository->save(Response::record((string) Str::uuid(), $tenantId, $questionB->id, 'Unrelated answer.', $userId));
+
+        $responses = $repository->findAllByQuestion($questionA->id);
+
+        $this->assertCount(2, $responses);
+        $contents = array_map(fn (Response $response): string => $response->content, $responses);
+        $this->assertContains('Stakeholder A answer.', $contents);
+        $this->assertContains('Stakeholder B answer.', $contents);
+    }
 }

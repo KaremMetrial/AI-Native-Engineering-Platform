@@ -49,4 +49,23 @@ class EloquentConstraintRepositoryTest extends TestCase
 
         $this->assertNull((new EloquentConstraintRepository)->findById((string) Str::uuid()));
     }
+
+    public function test_find_all_by_session_returns_only_that_sessions_constraints(): void
+    {
+        $tenantId = $this->createTenant();
+        $this->app->make(TenantContext::class)->bind($tenantId);
+        $projectId = $this->createProject($tenantId);
+        $userId = $this->createUser();
+        $sessionA = $this->createDiscoverySession($tenantId, $projectId, $userId);
+        $sessionB = $this->createDiscoverySession($tenantId, $projectId, $userId);
+
+        $repository = new EloquentConstraintRepository;
+        $repository->save(Constraint::capture((string) Str::uuid(), $tenantId, $sessionA, 'Constraint A.', $userId));
+        $repository->save(Constraint::capture((string) Str::uuid(), $tenantId, $sessionB, 'Constraint B.', $userId));
+
+        $constraints = $repository->findAllBySession($sessionA);
+
+        $this->assertCount(1, $constraints);
+        $this->assertSame('Constraint A.', $constraints[0]->statement);
+    }
 }

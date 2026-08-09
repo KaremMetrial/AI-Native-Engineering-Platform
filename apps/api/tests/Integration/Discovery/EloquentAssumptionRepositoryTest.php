@@ -49,4 +49,23 @@ class EloquentAssumptionRepositoryTest extends TestCase
 
         $this->assertNull((new EloquentAssumptionRepository)->findById((string) Str::uuid()));
     }
+
+    public function test_find_all_by_session_returns_only_that_sessions_assumptions(): void
+    {
+        $tenantId = $this->createTenant();
+        $this->app->make(TenantContext::class)->bind($tenantId);
+        $projectId = $this->createProject($tenantId);
+        $userId = $this->createUser();
+        $sessionA = $this->createDiscoverySession($tenantId, $projectId, $userId);
+        $sessionB = $this->createDiscoverySession($tenantId, $projectId, $userId);
+
+        $repository = new EloquentAssumptionRepository;
+        $repository->save(Assumption::capture((string) Str::uuid(), $tenantId, $sessionA, 'Assumption A.', $userId));
+        $repository->save(Assumption::capture((string) Str::uuid(), $tenantId, $sessionB, 'Assumption B.', $userId));
+
+        $assumptions = $repository->findAllBySession($sessionA);
+
+        $this->assertCount(1, $assumptions);
+        $this->assertSame('Assumption A.', $assumptions[0]->statement);
+    }
 }

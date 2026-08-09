@@ -9,4 +9,9 @@ interface AssumptionRepository
     public function save(Assumption $assumption): void;
 
     public function findById(string $id): ?Assumption;
+
+    /**
+     * @return list<Assumption>
+     */
+    public function findAllBySession(string $sessionId): array;
 }

@@ -13,7 +13,24 @@ assumptions get laundered into signed commitments.
 **In:** starting a discovery session against a project; structured
 elicitation (asking questions, recording responses — more than one response
 per question is allowed, since more than one stakeholder may answer);
-capturing assumptions and constraints; completing a session.
+capturing assumptions and constraints; completing a session; reading back
+everything above (list sessions, get a session, list a session's questions,
+list a question's responses, list a session's assumptions/constraints) —
+the minimum read surface a client needs to use the writes.
+
+## Reads: direct repository queries, not a read model
+
+Every read above is served by a direct query against the same normalized
+tables the writes use — no projection. Per
+`docs/architecture/data/43-write-and-read-models.md`, a read model is
+justified only when at least two of five criteria hold (cross-context join,
+divergent shape, expensive query, read-heavy skew, acceptable staleness);
+none apply here — these are single-context "fetch this aggregate" and "list
+these entities filtered by tenant/parent" reads, exactly what the write
+model serves best with strong consistency. The five repositories'
+`findAll()`/`findAllBySession()`/`findAllByQuestion()` methods use
+`DB::table()` rather than Eloquent, for the same PHPStan-generics reason
+documented on Graph's `EloquentArtifactRepository::findById()`.
 
 **Out, deliberately** — not because they're hard, but because nothing needs
 them yet:

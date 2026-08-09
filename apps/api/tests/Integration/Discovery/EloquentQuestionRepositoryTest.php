@@ -67,4 +67,25 @@ class EloquentQuestionRepositoryTest extends TestCase
 
         $this->assertNull((new EloquentQuestionRepository)->findById((string) Str::uuid()));
     }
+
+    public function test_find_all_by_session_returns_questions_ordered_by_sequence(): void
+    {
+        $tenantId = $this->createTenant();
+        $this->app->make(TenantContext::class)->bind($tenantId);
+        $projectId = $this->createProject($tenantId);
+        $userId = $this->createUser();
+        $sessionA = $this->createDiscoverySession($tenantId, $projectId, $userId);
+        $sessionB = $this->createDiscoverySession($tenantId, $projectId, $userId);
+
+        $repository = new EloquentQuestionRepository;
+        $repository->save(Question::ask((string) Str::uuid(), $tenantId, $sessionA, 'Second?', 2, $userId));
+        $repository->save(Question::ask((string) Str::uuid(), $tenantId, $sessionA, 'First?', 1, $userId));
+        $repository->save(Question::ask((string) Str::uuid(), $tenantId, $sessionB, 'Other session?', 1, $userId));
+
+        $questions = $repository->findAllBySession($sessionA);
+
+        $this->assertCount(2, $questions);
+        $this->assertSame('First?', $questions[0]->prompt);
+        $this->assertSame('Second?', $questions[1]->prompt);
+    }
 }
