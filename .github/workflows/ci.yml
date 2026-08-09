@@ -27,8 +27,10 @@ jobs:
           filters: |
             api:
               - 'apps/api/**'
+              - 'packages/contracts/**'
             web:
               - 'apps/web/**'
+              - 'packages/contracts/**'
             ai:
               - 'apps/ai/**'
 
@@ -119,6 +121,23 @@ jobs:
           DB_MIGRATE_PASSWORD: migrator_ci_only
           REDIS_HOST: 127.0.0.1
         run: composer test
+
+      # D-110: the OpenAPI spec in packages/contracts is the single source
+      # of truth, generated from routes and FormRequest rules -- a
+      # hand-edited or stale committed spec must fail the build, the same
+      # way any other generated-artifact drift would.
+      - name: Verify OpenAPI contract is up to date
+        env:
+          DB_HOST: 127.0.0.1
+          DB_USERNAME: platform_app
+          DB_PASSWORD: app_ci_only
+          REDIS_HOST: 127.0.0.1
+        run: |
+          composer contract:export
+          git diff --exit-code -- ../../packages/contracts/openapi.json || {
+            echo "::error::packages/contracts/openapi.json is stale -- run 'composer contract:export' in apps/api and commit the result."
+            exit 1
+          }
 
   web:
     needs: changes

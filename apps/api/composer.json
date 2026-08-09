@@ -7,6 +7,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "dedoc/scramble": "^0.13.39",
         "laravel/framework": "^13.8",
         "laravel/sanctum": "^4.3",
         "laravel/tinker": "^3.0"
@@ -57,6 +58,9 @@
         ],
         "format:check": [
             "@php vendor/bin/pint --test"
+        ],
+        "contract:export": [
+            "@php artisan scramble:export --path=../../packages/contracts/openapi.json"
         ],
         "check": [
             "@composer format:check",
