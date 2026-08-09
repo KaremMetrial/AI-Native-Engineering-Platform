@@ -13,4 +13,9 @@ interface RequirementRepository
     public function countByDocument(string $documentId): int;
 
     public function countApprovedByDocument(string $documentId): int;
+
+    /**
+     * @return list<Requirement>
+     */
+    public function findAllByDocument(string $documentId): array;
 }

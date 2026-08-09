@@ -16,7 +16,27 @@ of any particular Discovery session.
 adding requirements with acceptance criteria to a draft document; approving
 an individual requirement; approving a document once every requirement
 under it is approved (`docs/architecture/design/32-domain-model-and-ddd.md`:
-"cannot be approved while any requirement is incomplete").
+"cannot be approved while any requirement is incomplete"); reading back
+everything above (list documents, get a document, list a document's
+requirements with their acceptance criteria, get a requirement) — the
+minimum read surface a client needs to use the writes, not
+`TraceabilityEntry` below.
+
+## Reads: direct repository queries, not a read model
+
+Every read above is served by a direct query against the same normalized
+tables the writes use — no projection. Per
+`docs/architecture/data/43-write-and-read-models.md`, a read model is
+justified only when at least two of five criteria hold (cross-context join,
+divergent shape, expensive query, read-heavy skew, acceptable staleness);
+none apply here — these are single-context "fetch this aggregate" and "list
+these entities filtered by tenant/parent" reads, exactly what the write
+model serves best with strong consistency. `RequirementDocumentRepository::findAll()`
+and `RequirementRepository::findAllByDocument()` use `DB::table()` rather
+than Eloquent, for the same PHPStan-generics reason documented on Graph's
+`EloquentArtifactRepository::findById()` — with one addition here: the
+query builder doesn't apply Eloquent's `acceptance_criteria` array cast, so
+that JSON column is decoded explicitly in `EloquentRequirementRepository::rowToDomain()`.
 
 **Out, deliberately** — not because they're hard, but because building them
 now would mean guessing at a contract that isn't specified yet:

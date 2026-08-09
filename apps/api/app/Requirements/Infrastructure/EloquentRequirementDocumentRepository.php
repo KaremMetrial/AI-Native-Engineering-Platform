@@ -8,6 +8,10 @@ use App\Requirements\Domain\DocumentType;
 use App\Requirements\Domain\RequirementDocument;
 use App\Requirements\Domain\RequirementDocumentRepository;
 use App\Requirements\Domain\RequirementDocumentStatus;
+use DateTimeImmutable;
+use Illuminate\Support\Facades\DB;
+use RuntimeException;
+use stdClass;
 
 class EloquentRequirementDocumentRepository implements RequirementDocumentRepository
 {
@@ -34,6 +38,18 @@ class EloquentRequirementDocumentRepository implements RequirementDocumentReposi
         return $model === null ? null : $this->toDomain($model);
     }
 
+    public function findAll(): array
+    {
+        // Plain query builder, not Eloquent -- without Larastan (D-206)
+        // PHPStan's inference of chained Eloquent Builder generics is
+        // unreliable; DB::table() has a single, well-typed stdClass-row
+        // contract instead (see Graph's EloquentProjectRepository for the
+        // same workaround).
+        $rows = DB::table('requirement_documents')->orderBy('created_at')->get();
+
+        return array_values($rows->map(fn (mixed $row): RequirementDocument => $this->rowToDomain($row))->all());
+    }
+
     private function toDomain(EloquentRequirementDocument $model): RequirementDocument
     {
         return new RequirementDocument(
@@ -46,5 +62,32 @@ class EloquentRequirementDocumentRepository implements RequirementDocumentReposi
             createdBy: $model->created_by,
             createdAt: $model->created_at->toDateTimeImmutable(),
         );
+    }
+
+    private function rowToDomain(mixed $row): RequirementDocument
+    {
+        if (! $row instanceof stdClass) {
+            throw new RuntimeException('Expected a stdClass row from requirement_documents.');
+        }
+
+        return new RequirementDocument(
+            id: $this->requireString($row->id),
+            tenantId: $this->requireString($row->tenant_id),
+            projectId: $this->requireString($row->project_id),
+            type: DocumentType::from($this->requireString($row->type)),
+            title: $this->requireString($row->title),
+            status: RequirementDocumentStatus::from($this->requireString($row->status)),
+            createdBy: $this->requireString($row->created_by),
+            createdAt: new DateTimeImmutable($this->requireString($row->created_at)),
+        );
+    }
+
+    private function requireString(mixed $value): string
+    {
+        if (! is_string($value)) {
+            throw new RuntimeException('Expected a string column value.');
+        }
+
+        return $value;
     }
 }

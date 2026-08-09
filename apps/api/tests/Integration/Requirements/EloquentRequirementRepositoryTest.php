@@ -81,4 +81,32 @@ class EloquentRequirementRepositoryTest extends TestCase
 
         $this->assertNull((new EloquentRequirementRepository)->findById((string) Str::uuid()));
     }
+
+    public function test_find_all_by_document_returns_only_that_documents_requirements_with_acceptance_criteria(): void
+    {
+        $tenantId = $this->createTenant();
+        $this->app->make(TenantContext::class)->bind($tenantId);
+        $projectId = $this->createProject($tenantId);
+        $userId = $this->createUser();
+        $documentA = $this->createRequirementDocument($tenantId, $projectId, $userId);
+        $documentB = $this->createRequirementDocument($tenantId, $projectId, $userId);
+
+        $repository = new EloquentRequirementRepository;
+        $repository->save(Requirement::draft(
+            (string) Str::uuid(),
+            $tenantId,
+            $documentA,
+            'Requirement A',
+            [new AcceptanceCriterion('Criterion A.')],
+            $userId,
+        ));
+        $repository->save(Requirement::draft((string) Str::uuid(), $tenantId, $documentB, 'Requirement B', [], $userId));
+
+        $requirements = $repository->findAllByDocument($documentA);
+
+        $this->assertCount(1, $requirements);
+        $this->assertSame('Requirement A', $requirements[0]->text);
+        $this->assertCount(1, $requirements[0]->acceptanceCriteria());
+        $this->assertSame('Criterion A.', $requirements[0]->acceptanceCriteria()[0]->description);
+    }
 }
