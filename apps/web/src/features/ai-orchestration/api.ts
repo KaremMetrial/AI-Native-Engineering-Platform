@@ -65,7 +65,9 @@ export async function requestGeneration(
   return { ...data, status: data.status as GenerationStatus }
 }
 
-export async function getGenerationRequest(generationRequestId: string): Promise<GenerationRequest> {
+export async function getGenerationRequest(
+  generationRequestId: string,
+): Promise<GenerationRequest> {
   const { data, error } = await apiClient.GET('/generation-requests/{generationRequestId}', {
     params: { path: { generationRequestId } },
   })
