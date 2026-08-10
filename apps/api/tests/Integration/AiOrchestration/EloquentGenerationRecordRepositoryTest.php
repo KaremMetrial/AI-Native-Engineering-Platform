@@ -98,4 +98,63 @@ class EloquentGenerationRecordRepositoryTest extends TestCase
 
         $this->assertNull((new EloquentGenerationRecordRepository)->findById((string) Str::uuid()));
     }
+
+    public function test_find_all_returns_all_saved_records(): void
+    {
+        $tenantId = $this->createTenant();
+        $this->app->make(TenantContext::class)->bind($tenantId);
+        $userId = $this->createUser();
+        $repository = new EloquentGenerationRecordRepository;
+
+        $first = GenerationRecord::request(
+            id: (string) Str::uuid(),
+            tenantId: $tenantId,
+            workflowName: 'brd-synthesis',
+            capabilityRequirement: new CapabilityRequirement(
+                structuredOutput: StructuredOutputCapability::None,
+                toolUse: ToolUseCapability::None,
+                streaming: StreamingCapability::None,
+                minContextWindow: 1,
+            ),
+            requestedBy: $userId,
+        );
+        $repository->save($first);
+
+        $second = GenerationRecord::request(
+            id: (string) Str::uuid(),
+            tenantId: $tenantId,
+            workflowName: 'srs-synthesis',
+            capabilityRequirement: new CapabilityRequirement(
+                structuredOutput: StructuredOutputCapability::JsonMode,
+                toolUse: ToolUseCapability::Sequential,
+                streaming: StreamingCapability::Text,
+                minContextWindow: 4000,
+                requiresVision: true,
+                requiresDeterministicSeed: true,
+            ),
+            requestedBy: $userId,
+        );
+        $second->fail('No active model satisfies the requested capabilities and tenant provider policy.');
+        $repository->save($second);
+
+        $all = $repository->findAll();
+        $byId = [];
+        foreach ($all as $record) {
+            $byId[$record->id] = $record;
+        }
+
+        $this->assertCount(2, $all);
+        $this->assertSame(GenerationStatus::Failed, $byId[$second->id]->status());
+        $this->assertSame('No active model satisfies the requested capabilities and tenant provider policy.', $byId[$second->id]->failureReason());
+        $this->assertSame(GenerationStatus::Queued, $byId[$first->id]->status());
+        $this->assertFalse($byId[$first->id]->capabilityRequirement->requiresVision);
+    }
+
+    public function test_find_all_returns_empty_array_when_no_records_exist(): void
+    {
+        $tenantId = $this->createTenant();
+        $this->app->make(TenantContext::class)->bind($tenantId);
+
+        $this->assertSame([], (new EloquentGenerationRecordRepository)->findAll());
+    }
 }

@@ -54,10 +54,15 @@ it to `Selected` or `Failed`).
   real completed call to account for.
 - **No public write path for the registry or tenant policies.**
   `RegisterModel` and `SetTenantProviderPolicy` exist as Application-layer
-  use cases, invoked from tests and (in production) a seeder — never from
-  an HTTP controller. The registry is "configuration, reviewed like code,
-  not runtime-editable" (D-280); tenant provider policy needs a real admin
-  surface (Platform Administration, C15), not yet built.
+  use cases, invoked from tests and from
+  `database/seeders/AiOrchestrationModelRegistrySeeder.php` — never from an
+  HTTP controller. The registry is "configuration, reviewed like code, not
+  runtime-editable" (D-280); the seeder registers a small, real catalogue
+  (Anthropic and OpenAI frontier/balanced/fast entries) and promotes each
+  straight to `Active`, idempotently by `model_id`. Tenant provider policy
+  still has no seeder or admin surface (Platform Administration, C15), not
+  yet built — a tenant with no policy row is unrestricted by design (see
+  `SelectCandidateModels`).
 - **`GenerationRecord` carries no cost or lineage.** D-469 describes
   `GenerationRecord` as "the source of truth for AI cost and lineage" —
   this pass's version only carries candidate selection, because nothing
@@ -81,7 +86,7 @@ Domain/           Provider/ModelTier/ModelStatus/GenerationStatus enums;
                   Framework-free (D-130).
 Application/      RegisterModel, SetTenantProviderPolicy (seeder-only, no
                   HTTP route), SelectCandidateModels (the filter stage),
-                  RequestGeneration (the P-9 boundary).
+                  RequestGeneration (the P-9 boundary), ListGenerationRequests.
 Infrastructure/   Eloquent models and repositories, NullModelAdapter,
                   QueuedGenerationDispatcher, ProcessGenerationRequest (a
                   queued Job -- a framework-level entry point into
@@ -91,8 +96,18 @@ Presentation/     RequestGenerationController (POST, 202 Accepted -- the
                   first genuinely asynchronous endpoint in this codebase;
                   the response body reports `queued`, not a result, by
                   design), GetGenerationRequestController (poll for
-                  status).
+                  status), ListGenerationRequestsController (request
+                  history for the current tenant).
 ```
+
+## Reads: direct repository queries, not a read model
+
+`ListGenerationRequests`/`ListGenerationRequestsController` query
+`GenerationRecordRepository::findAll()` directly, the same pattern as
+Graph, Discovery and Requirements — see their READMEs and
+`docs/architecture/data/43-write-and-read-models.md`. `findAll()` returns
+every generation record visible under the bound tenant's RLS policy, most
+recent first; there is no separate read-optimized projection.
 
 ## The Model Registry has no `tenant_id`
 

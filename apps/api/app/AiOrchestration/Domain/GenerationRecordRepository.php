@@ -9,4 +9,9 @@ interface GenerationRecordRepository
     public function save(GenerationRecord $record): void;
 
     public function findById(string $id): ?GenerationRecord;
+
+    /**
+     * @return list<GenerationRecord>
+     */
+    public function findAll(): array;
 }

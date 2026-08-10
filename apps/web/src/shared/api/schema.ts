@@ -372,6 +372,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/generation-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["presentation.listGenerationRequests"];
+        put?: never;
+        post: operations["presentation.requestGeneration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/projects/{projectId}/artifacts": {
         parameters: {
             query?: never;
@@ -462,22 +478,6 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["presentation.register"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/generation-requests": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["presentation.requestGeneration"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1755,6 +1755,56 @@ export interface operations {
             422: components["responses"]["ValidationException"];
         };
     };
+    "presentation.listGenerationRequests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        generation_requests: unknown[];
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+        };
+    };
+    "presentation.requestGeneration": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestGenerationRequest"];
+            };
+        };
+        responses: {
+            202: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        status: string;
+                    };
+                };
+            };
+            401: components["responses"]["AuthenticationException"];
+            422: components["responses"]["ValidationException"];
+        };
+    };
     "presentation.listProjectArtifacts": {
         parameters: {
             query?: never;
@@ -2001,34 +2051,6 @@ export interface operations {
                     };
                 };
             };
-            422: components["responses"]["ValidationException"];
-        };
-    };
-    "presentation.requestGeneration": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RequestGenerationRequest"];
-            };
-        };
-        responses: {
-            202: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        status: string;
-                    };
-                };
-            };
-            401: components["responses"]["AuthenticationException"];
             422: components["responses"]["ValidationException"];
         };
     };

@@ -13,6 +13,9 @@ export function HomePage() {
       <p>
         <Link to="/requirement-documents">View requirement documents</Link>
       </p>
+      <p>
+        <Link to="/generation-requests">View generation requests</Link>
+      </p>
     </div>
   )
 }

@@ -1,4 +1,5 @@
 import { createBrowserRouter } from 'react-router-dom'
+import { aiOrchestrationRoutes } from '../features/ai-orchestration/routes'
 import { discoveryRoutes } from '../features/discovery/routes'
 import { graphRoutes } from '../features/graph/routes'
 import { identityRoutes } from '../features/identity/routes'
@@ -31,6 +32,7 @@ export const router = createBrowserRouter([
       ...graphRoutes,
       ...discoveryRoutes,
       ...requirementsRoutes,
+      ...aiOrchestrationRoutes,
     ],
   },
 ])

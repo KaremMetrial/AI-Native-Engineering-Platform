@@ -11,4 +11,6 @@ import from each other — shared code moves to `shared/` instead.
 Shipped so far: `identity` (register/login/logout, session), `graph` (project
 workspace: projects, artifacts, versions, links, approvals), `discovery`
 (sessions, questions, responses, assumptions, constraints), `requirements`
-(documents, requirements with acceptance criteria, approvals).
+(documents, requirements with acceptance criteria, approvals), `ai-orchestration`
+(submit a generation request, poll it to a selected model or failure reason —
+the P-9 sync/async boundary made visible in the UI).
